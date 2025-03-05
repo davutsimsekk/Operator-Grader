@@ -1,0 +1,17 @@
+<mat-form-field>
+  <mat-label>Username or Email</mat-label>
+  <input matInput [(ngModel)]="username">
+</mat-form-field>
+
+<mat-form-field>
+  <mat-label>Password</mat-label>
+  <input matInput type="password" [(ngModel)]="password">
+</mat-form-field>
+
+<button mat-raised-button color="primary" (click)="login()">Login</button>
+
+<p>
+  Not registered yet? <a routerLink="/register">Register</a>
+</p>
+
+<p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
