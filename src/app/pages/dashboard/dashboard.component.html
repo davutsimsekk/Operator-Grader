@@ -1,83 +1,203 @@
 <div class="dashboard-container">
-  <mat-grid-list cols="3" rowHeight="fit">
-    <mat-grid-tile>
-      <mat-card>
+  <mat-grid-list cols="6" rowHeight="fit">
+    <mat-grid-tile colspan="1">
+      <mat-card class="full-height">
         <mat-card-header>
-          <mat-card-title>Daily</mat-card-title>
+          <mat-icon mat-card-avatar>today</mat-icon>
+          <mat-card-title>Günlük Sıralama</mat-card-title>
         </mat-card-header>
-        <mat-card-content>
-          <mat-list>
-            <mat-list-item>Time Sorted - Speech 1</mat-list-item>
-            <mat-list-item>Time Sorted - Speech 2</mat-list-item>
-            <mat-list-item>Time Sorted - Speech 3</mat-list-item>
-          </mat-list>
-          <mat-list>
-            <mat-list-item>Point Sorted - Speech 1</mat-list-item>
-            <mat-list-item>Point Sorted - Speech 2</mat-list-item>
-            <mat-list-item>Point Sorted - Speech 3</mat-list-item>
-          </mat-list>
+        <mat-card-content class="scrollable-content">
+          <div class="table-container">
+            <table mat-table [dataSource]="getDailyPaginatedData()" class="compact-table">
+              <ng-container matColumnDef="ID">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-ID">ID</th>
+                <td mat-cell *matCellDef="let speech">{{speech.ID}}</td>
+              </ng-container>
+              <ng-container matColumnDef="Operator">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-Operator">Operatör</th>
+                <td mat-cell *matCellDef="let speech">{{speech.Operator}}</td>
+              </ng-container>
+              <ng-container matColumnDef="Musteri">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-Musteri">Müşteri</th>
+                <td mat-cell *matCellDef="let speech">{{speech.Musteri}}</td>
+              </ng-container>
+              <ng-container matColumnDef="Puan">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-Puan">Puan</th>
+                <td mat-cell *matCellDef="let speech">
+                  <span class="point-badge" [ngClass]="{'high-points': speech.Puan > 80, 'medium-points': speech.Puan >= 60 && speech.Puan <= 80, 'low-points': speech.Puan < 60}">
+                    {{speech.Puan}}
+                  </span>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClick(row)" [class.selected]="selectedSpeech === row"></tr>
+            </table>
+            <mat-paginator
+              [length]="dailySpeeches.length"
+              [pageSize]="dailyPageSize"
+              [pageIndex]="dailyPageIndex"
+              [pageSizeOptions]="[5]"
+              [hidePageSize]="true"
+              (page)="onDailyPageChange($event)"
+              class="dashboard-paginator">
+            </mat-paginator>
+          </div>
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
 
-    <mat-grid-tile rowspan="2">
-      <mat-card>
+    <mat-grid-tile colspan="4" rowspan="2">
+      <mat-card class="full-height speech-info-card">
         <mat-card-header>
-          <mat-card-title>Speech Information</mat-card-title>
+          <mat-icon mat-card-avatar>record_voice_over</mat-icon>
+          <mat-card-title>Konuşma Bilgisi</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <p>Selected speech details and analysis will be displayed here.</p>
+          <div *ngIf="selectedSpeech" class="speech-details">
+            <h3>Konuşma Detayları</h3>
+            <div class="two-column-grid">
+              <!-- Left Column -->
+              <div class="detail-column">
+                <div class="detail-item">
+                  <mat-icon>badge</mat-icon>
+                  <p><strong>Konuşma ID:</strong> {{selectedSpeech.ID}}</p>
+                </div>
+                <div class="detail-item">
+                  <mat-icon>person</mat-icon>
+                  <p><strong>Operatör:</strong> {{selectedSpeech.Operator}}</p>
+                </div>
+                <div class="detail-item">
+                  <mat-icon>timer</mat-icon>
+                  <p><strong>Konuşma Süresi:</strong> {{selectedSpeech.KonusmaSuresi}}</p>
+                </div>
+              </div>
+              <!-- Right Column -->
+              <div class="detail-column">
+                <div class="detail-item">
+                  <mat-icon>people</mat-icon>
+                  <p><strong>Müşteri:</strong> {{selectedSpeech.Musteri}}</p>
+                </div>
+                <div class="detail-item">
+                  <mat-icon>star_rate</mat-icon>
+                  <p><strong>Konuşma Puanı:</strong> 
+                    <span class="point-badge" [ngClass]="{'high-points': selectedSpeech.Puan > 80, 'medium-points': selectedSpeech.Puan >= 60 && selectedSpeech.Puan <= 80, 'low-points': selectedSpeech.Puan < 60}">
+                      {{selectedSpeech.Puan}}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!selectedSpeech" class="empty-state">
+            <mat-icon>touch_app</mat-icon>
+            <p>Detayları Görmek İçin Bir Konuşma Seçin</p>
+          </div>
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
 
-    <mat-grid-tile>
-      <mat-card>
+    <mat-grid-tile colspan="1">
+      <mat-card class="full-height">
         <mat-card-header>
-          <mat-card-title>Weekly</mat-card-title>
+          <mat-icon mat-card-avatar>date_range</mat-icon>
+          <mat-card-title>Haftalık Sıralama</mat-card-title>
         </mat-card-header>
-        <mat-card-content>
-          <mat-list>
-            <mat-list-item>Time Sorted - Speech 1</mat-list-item>
-            <mat-list-item>Time Sorted - Speech 2</mat-list-item>
-            <mat-list-item>Time Sorted - Speech 3</mat-list-item>
-          </mat-list>
-          <mat-list>
-            <mat-list-item>Point Sorted - Speech 1</mat-list-item>
-            <mat-list-item>Point Sorted - Speech 2</mat-list-item>
-            <mat-list-item>Point Sorted - Speech 3</mat-list-item>
-          </mat-list>
+        <mat-card-content class="scrollable-content">
+          <div class="table-container">
+            <table mat-table [dataSource]="getWeeklyPaginatedData()" class="compact-table">
+              <ng-container matColumnDef="ID">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-ID">ID</th>
+                <td mat-cell *matCellDef="let speech">{{speech.ID}}</td>
+              </ng-container>
+              <ng-container matColumnDef="Operator">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-Operator">Operatör</th>
+                <td mat-cell *matCellDef="let speech">{{speech.Operator}}</td>
+              </ng-container>
+              <ng-container matColumnDef="Musteri">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-Musteri">Müşteri</th>
+                <td mat-cell *matCellDef="let speech">{{speech.Musteri}}</td>
+              </ng-container>
+              <ng-container matColumnDef="Puan">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-Puan">Puan</th>
+                <td mat-cell *matCellDef="let speech">
+                  <span class="point-badge" [ngClass]="{'high-points': speech.Puan > 80, 'medium-points': speech.Puan >= 60 && speech.Puan <= 80, 'low-points': speech.Puan < 60}">
+                    {{speech.Puan}}
+                  </span>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClick(row)" [class.selected]="selectedSpeech === row"></tr>
+            </table>
+            <mat-paginator
+              [length]="weeklySpeeches.length"
+              [pageSize]="weeklyPageSize"
+              [pageIndex]="weeklyPageIndex"
+              [pageSizeOptions]="[5]"
+              [hidePageSize]="true"
+              (page)="onWeeklyPageChange($event)"
+              class="dashboard-paginator">
+            </mat-paginator>
+          </div>
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
 
-    <mat-grid-tile>
-      <mat-card>
+    <mat-grid-tile colspan="1">
+      <mat-card class="full-height">
         <mat-card-header>
-          <mat-card-title>Monthly</mat-card-title>
+          <mat-icon mat-card-avatar>calendar_month</mat-icon>
+          <mat-card-title>Aylık Sıralama</mat-card-title>
         </mat-card-header>
-        <mat-card-content>
-          <mat-list>
-            <mat-list-item>Time Sorted - Speech 1</mat-list-item>
-            <mat-list-item>Time Sorted - Speech 2</mat-list-item>
-            <mat-list-item>Time Sorted - Speech 3</mat-list-item>
-          </mat-list>
-          <mat-list>
-            <mat-list-item>Point Sorted - Speech 1</mat-list-item>
-            <mat-list-item>Point Sorted - Speech 2</mat-list-item>
-            <mat-list-item>Point Sorted - Speech 3</mat-list-item>
-          </mat-list>
+        <mat-card-content class="scrollable-content">
+          <div class="table-container">
+            <table mat-table [dataSource]="getMonthlyPaginatedData()" class="compact-table">
+              <ng-container matColumnDef="ID">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-ID">ID</th>
+                <td mat-cell *matCellDef="let speech">{{speech.ID}}</td>
+              </ng-container>
+              <ng-container matColumnDef="Operator">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-Operator">Operatör</th>
+                <td mat-cell *matCellDef="let speech">{{speech.Operator}}</td>
+              </ng-container>
+              <ng-container matColumnDef="Musteri">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-Musteri">Müşteri</th>
+                <td mat-cell *matCellDef="let speech">{{speech.Musteri}}</td>
+              </ng-container>
+              <ng-container matColumnDef="Puan">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-Puan">Puan</th>
+                <td mat-cell *matCellDef="let speech">
+                  <span class="point-badge" [ngClass]="{'high-points': speech.Puan > 80, 'medium-points': speech.Puan >= 60 && speech.Puan <= 80, 'low-points': speech.Puan < 60}">
+                    {{speech.Puan}}
+                  </span>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClick(row)" [class.selected]="selectedSpeech === row"></tr>
+            </table>
+            <mat-paginator
+              [length]="monthlySpeeches.length"
+              [pageSize]="monthlyPageSize"
+              [pageIndex]="monthlyPageIndex"
+              [pageSizeOptions]="[5]"
+              [hidePageSize]="true"
+              (page)="onMonthlyPageChange($event)"
+              class="dashboard-paginator">
+            </mat-paginator>
+          </div>
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
 
-    <mat-grid-tile colspan="3">
-      <mat-card>
+    <mat-grid-tile colspan="6" rowheight="2:1">
+      <mat-card class="sound-graph-card">
         <mat-card-header>
-          <mat-card-title>Sound Graph</mat-card-title>
+          <mat-icon mat-card-avatar>equalizer</mat-icon>
+          <mat-card-title>Ses Grafiği</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <p>Sound graph will be displayed here.</p>
+          <div class="sound-graph-wrapper">
+            <p>Ses grafiği burada gösterilecek.</p>
+          </div>
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>

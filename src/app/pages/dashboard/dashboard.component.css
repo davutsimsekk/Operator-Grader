@@ -1,34 +1,552 @@
+/* Modern Dashboard Theme */
+:root {
+  --primary-color: #5667ff;
+  --primary-light: #7986ff;
+  --primary-dark: #4050e6;
+  --accent-color: #ff5252;
+  --success-color: #2ecc71;
+  --warning-color: #ff9800;
+  --danger-color: #f44336;
+  --text-color: #2c3e50;
+  --text-light: #7f8c8d;
+  --background-light: #ecf0f1;
+  --card-background: #ffffff;
+  --border-radius: 10px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
 .dashboard-container {
   display: flex;
-  height: 100vh;
+  height: 100%;
+  width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
   flex-direction: column;
+  background: linear-gradient(135deg, #ecf0f1 0%, #f5f7fa 100%);
+  color: var(--text-color);
 }
 
 mat-grid-list {
   flex: 1;
+  padding: 8px;
+  height: calc(100vh - 90px);
 }
 
 mat-grid-tile {
-  padding: 16px;
+  padding: 0;
+  transition: var(--transition);
+  height: 100%;
+  overflow: hidden;
 }
 
+/* Card styling */
 mat-card {
   height: 100%;
   display: flex;
   flex-direction: column;
+  margin: 8px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  transition: var(--transition);
+  overflow: hidden;
+}
+
+mat-card:hover {
+  box-shadow: var(--hover-shadow);
+}
+
+mat-card.full-height {
+  border-top: 3px solid var(--primary-color);
+}
+
+mat-grid-tile:nth-child(1) mat-card {
+  border-top-color: var(--success-color);
+}
+
+mat-grid-tile:nth-child(2) mat-card.speech-info-card {
+  border-top-color: var(--primary-color);
+  background: linear-gradient(to bottom, rgba(86, 103, 255, 0.05) 0%, rgba(255, 255, 255, 1) 100%);
+}
+
+mat-grid-tile:nth-child(3) mat-card {
+  border-top-color: var(--warning-color);
+}
+
+mat-grid-tile:nth-child(4) mat-card {
+  border-top-color: var(--danger-color);
 }
 
 mat-card-content {
   flex: 1;
-  overflow: auto; /* Enable scroll if content is too long */
+  overflow: hidden;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card-header {
+  padding: 18px 16px 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background: linear-gradient(to right, rgba(86, 103, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.mat-mdc-card-header {
+  padding: 16px;
+}
+
+.mat-mdc-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin-bottom: 0;
+  letter-spacing: 0.5px;
 }
 
 .mat-mdc-list-item {
-  cursor: pointer; /* Indicate items are clickable */
+  cursor: pointer;
 }
 
 .sound-graph-container {
+  padding: 12px;
+  margin: 12px;
+  height: 150px;
+}
+
+.full-height {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.full-width {
+  width: 99%;
+  box-sizing: border-box;
+  margin: 3px; /* Reduced margin */
+}
+
+/* Table container styling fixes */
+.scrollable-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+
+.scrollable-content::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+  background: var(--primary-light);
+  border-radius: 10px;
+}
+
+.scrollable-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 10px;
+}
+
+/* Table sizing fixes */
+.compact-table {
+  display: block;
+  width: 100%;
+  height: calc(100% - 56px); /* Account for paginator */
+  overflow: auto;
+}
+
+/* Column width control */
+.compact-table th, .compact-table td {
+  padding: 6px 4px; /* Reduced padding */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+  max-width: 80px; /* Limit column width */
+}
+
+/* Sticky header fixes */
+.compact-table th.mat-header-cell {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #f5f7fa; /* Match your background or use a distinct color */
+  box-shadow: 0 1px 0 rgba(0,0,0,0.1); /* Bottom shadow for visual separation */
+}
+
+/* Fix for the header cells */
+:host ::ng-deep .mat-mdc-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+}
+
+/* Adjust siralama card content padding */
+mat-grid-tile:nth-child(1) mat-card-content,
+mat-grid-tile:nth-child(3) mat-card-content,
+mat-grid-tile:nth-child(4) mat-card-content {
+  padding: 0; /* Remove padding from card content for better table fit */
+  overflow: hidden;
+}
+
+/* Add specific width controls for each column type */
+.mat-column-speechId {
+  width: 15%;
+  min-width: 40px;
+}
+
+.mat-column-operatorName {
+  width: 30%;
+}
+
+.mat-column-customerName {
+  width: 30%;
+}
+
+.mat-column-pointOfSpeech {
+  width: 25%;
+  text-align: center;
+}
+
+/* Make rows more compact */
+.mat-mdc-row, .mat-mdc-header-row {
+  height: 32px; /* Reduced row height */
+  min-height: 32px;
+  cursor: pointer;
+}
+
+/* Ensure point badges fit in cells */
+td .point-badge {
+  padding: 2px 6px;
+  font-size: 0.9em;
+}
+
+.mat-mdc-row:hover {
+  background-color: rgba(63, 81, 181, 0.04);
+}
+
+.mat-mdc-row, .mat-mdc-header-row {
+  height: 36px;
+}
+
+.speech-details {
+  padding: 20px;
+  font-size: 0.95em;
+  line-height: 1.5;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 14px; /* Increased from 10px */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.05); /* Added subtle border */
+}
+
+.speech-details h3 {
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 16px;
+  border-bottom: 1px dashed rgba(86, 103, 255, 0.3);
+  padding-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 1.2em;
+}
+
+.speech-details strong {
+  color: var(--primary-dark);
+  font-weight: 500;
+}
+
+tr.selected {
+  background-color: rgba(63, 81, 181, 0.1) !important;
+  position: relative;
+}
+
+tr.selected::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background-color: var(--primary-color);
+}
+
+:host ::ng-deep .mat-mdc-table {
+  min-width: unset !important;
+}
+
+:host ::ng-deep .mat-sort-header-content {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.sound-graph-card {
+  height: 80%;
+  width: 80%;
+  margin: 3px;
+  box-sizing: border-box;
+  background: linear-gradient(to right bottom, #ffffff, #f8f9fa);
+  border-radius: var(--border-radius);
+  border-top: 3px solid var(--accent-color);
+}
+
+.sound-graph-wrapper {
+  width: 80%;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: var(--border-radius);
+  border: 1px dashed rgba(86, 103, 255, 0.3);
+}
+
+/* Animation for table rows */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mat-mdc-row {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Two column layout for speech details */
+.two-column-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.detail-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
   padding: 16px;
-  margin: 16px;
-  height: 100px; /* Adjust as needed */
+  background: #ffffff;
+  border-radius: 14px; /* Increased from 10px */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: var(--transition);
+  border: 1px solid rgba(0, 0, 0, 0.05); /* Added subtle border */
+}
+
+.detail-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.detail-item mat-icon {
+  margin-right: 12px;
+  color: var(--primary-color);
+  background: rgba(86, 103, 255, 0.1);
+  border-radius: 50%;
+  padding: 8px;
+  height: 24px;
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detail-item p {
+  margin: 0;
+  font-size: 0.95em;
+}
+
+.detail-item strong {
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+/* Point badge styling enhancements */
+.point-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 16px; /* Increased border radius */
+  font-weight: 700;
+  color: white;
+  min-width: 28px;
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.1); /* Added subtle border */
+}
+
+.high-points {
+  background-color: var(--success-color);
+  box-shadow: 0 2px 6px rgba(46, 204, 113, 0.3);
+  color: green;
+}
+
+.medium-points {
+  background-color: var(--warning-color);
+  box-shadow: 0 2px 6px rgba(255, 152, 0, 0.3);
+  color: greenyellow;
+}
+
+.low-points {
+  background-color: var(--danger-color);
+  box-shadow: 0 2px 6px rgba(244, 67, 54, 0.3);
+  color: red;
+}
+
+/* Better table cell styling */
+.compact-table th:first-child {
+  border-top-left-radius: 8px;
+}
+
+.compact-table th:last-child {
+  border-top-right-radius: 8px;
+}
+
+/* Empty state styling */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-light);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(248, 250, 252, 0.7) 100%);
+  border-radius: var(--border-radius);
+  padding: 32px;
+}
+
+.empty-state mat-icon {
+  font-size: 64px;
+  height: 64px;
+  width: 64px;
+  margin-bottom: 24px;
+  opacity: 0.5;
+  color: var(--primary-color);
+}
+
+.table-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0; /* Important for flex child scrolling */
+}
+
+/* Make the table scrollable */
+.table-container .mat-mdc-table {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto !important;
+}
+
+/* Ensure table wrapper takes available space */
+.table-container .mat-mdc-table-wrapper {
+  height: calc(100% - 56px); /* Account for paginator */
+  overflow-y: auto;
+}
+
+/* Keep header row fixed */
+.mat-mdc-header-row {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+}
+
+/* Ensure proper table layout */
+.compact-table {
+  display: block;
+  width: 100%;
+  height: calc(100% - 56px); /* Account for paginator */
+  overflow: auto;
+}
+
+/* Keep paginator at bottom */
+.dashboard-paginator {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  z-index: 100;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  min-height: 48px;
+}
+
+/* Ensure card content fills available space */
+mat-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Important for flex child scrolling */
+  overflow: hidden;
+}
+
+/* Update grid tile styles */
+mat-grid-tile {
+  overflow: hidden;
+}
+
+/* Ensure proper height for card */
+mat-card.full-height {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Update paginator styling */
+.dashboard-paginator {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  z-index: 100;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  min-height: 48px;
+}
+
+/* Hide Items per page label */
+:host ::ng-deep .mat-mdc-paginator-page-size {
+  display: none !important;
+}
+
+/* Center range label and navigation */
+:host ::ng-deep .mat-mdc-paginator-range-actions {
+  justify-content: center;
+  width: 100%;
+}
+
+:host ::ng-deep .mat-mdc-paginator-container {
+  justify-content: center;
+  min-height: 48px;
+}
+
+/* Ensure table container accounts for paginator */
+.table-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.table-container .mat-mdc-table {
+  height: calc(100% - 48px);
+  min-height: 0;
+  overflow-y: auto !important;
+}
+
+/* Ensure proper spacing for the last row */
+.mat-mdc-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Add some padding to the bottom of the table for better appearance */
+.mat-mdc-table tbody {
+  padding-bottom: 8px;
 }
