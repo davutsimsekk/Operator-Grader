@@ -6,19 +6,21 @@ import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { SpeechService, Speech } from '../../services/speech.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
-    MatGridListModule, 
-    MatCardModule, 
-    MatListModule, 
-    CommonModule, 
+    MatGridListModule,
+    MatCardModule,
+    MatListModule,
+    CommonModule,
     MatTableModule,
     MatIconModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatExpansionModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
@@ -35,7 +37,7 @@ export class DashboardComponent implements OnInit {
   monthlyPageSize = 5;
   monthlyPageIndex = 0;
 
-  displayedColumns: string[] = ['ID', 'Operator', 'Musteri', 'Puan'];
+  displayedColumns: string[] = ['ID', 'Operator', 'Musteri', 'Date', 'Time', 'Puan'];
 
   selectedSpeech: Speech | null = null;
 

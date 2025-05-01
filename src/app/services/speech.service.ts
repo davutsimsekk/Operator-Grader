@@ -8,6 +8,8 @@ export interface Speech {
   Musteri: string;
   Operator: string;
   Puan: number;
+  Date: string; // Assuming date is returned as a string
+  Time: string; // Assuming time is returned as a string
 }
 
 @Injectable({
@@ -29,4 +31,4 @@ export class SpeechService {
   getMonthlySorted(): Observable<Speech[]> {
     return this.http.get<Speech[]>(`${this.apiUrl}/monthlySorted`);
   }
-} 
+}

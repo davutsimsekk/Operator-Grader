@@ -161,7 +161,7 @@ mat-card-header {
 
 /* Column width control */
 .compact-table th, .compact-table td {
-  padding: 6px 4px; /* Reduced padding */
+  padding: 4px 2px; /* Further reduced padding */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; /* Add ellipsis for overflowing text */
@@ -549,4 +549,118 @@ mat-card.full-height {
 /* Add some padding to the bottom of the table for better appearance */
 .mat-mdc-table tbody {
   padding-bottom: 8px;
+}
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #ecf0f1 0%, #f5f7fa 100%);
+  color: var(--text-color);
+}
+
+.main-content {
+  display: flex;
+  flex-direction: row;
+  gap: 16px; /* Space between speech details and tables */
+  flex: 1;
+  overflow: hidden;
+}
+
+.speech-details-container {
+  flex: 4; /* Adjust flex values to control width ratio */
+  min-width: 0; /* Allow shrinking */
+}
+
+.tables-container {
+  flex: 1; /* Adjust flex values to control width ratio */
+  min-width: 0; /* Allow shrinking */
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Space between expansion panels */
+  overflow-y: auto; /* Add vertical scrolling */
+}
+
+mat-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Space between expansion panels */
+}
+
+mat-expansion-panel {
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  transition: var(--transition);
+  border-top: 3px solid var(--primary-color); /* Default border color */
+}
+
+mat-expansion-panel:hover {
+  box-shadow: var(--hover-shadow);
+}
+
+mat-expansion-panel-header {
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background: linear-gradient(to right, rgba(86, 103, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+mat-panel-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  letter-spacing: 0.5px;
+}
+
+/* Specific border colors for each table's expansion panel */
+mat-accordion mat-expansion-panel:nth-child(1) {
+  border-top-color: var(--success-color);
+}
+
+mat-accordion mat-expansion-panel:nth-child(2) {
+  border-top-color: var(--warning-color);
+}
+
+mat-accordion mat-expansion-panel:nth-child(3) {
+  border-top-color: var(--danger-color);
+}
+
+mat-expansion-panel .mat-expansion-panel-body {
+  padding: 0;
+}
+
+mat-expansion-panel mat-card {
+  margin: 0; /* Remove margin from card inside panel */
+  box-shadow: none; /* Remove shadow from card inside panel */
+  border-top: none; /* Remove border from card inside panel */
+}
+
+mat-expansion-panel mat-card-content {
+  padding: 0;
+}
+
+.sound-graph-card {
+  width: auto; /* Adjust width for flexbox layout */
+  margin-top: 16px; /* Add space above the sound graph */
+  flex-shrink: 0; /* Prevent shrinking */
+  height: 20%; /* Reduce height to 1/5 of the container */
+}
+
+.main-content {
+  display: flex;
+  flex-direction: row;
+  gap: 16px; /* Space between speech details and tables */
+  flex: 1;
+  overflow: hidden; /* Hide overflow to prevent layout issues */
+}
+
+.tables-container {
+  flex: 1; /* Adjust flex values to control width ratio */
+  min-width: 0; /* Allow shrinking */
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Space between expansion panels */
+  overflow-y: auto; /* Add vertical scrolling */
 }
