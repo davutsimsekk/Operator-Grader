@@ -79,6 +79,11 @@ const ELEMENT_DATA: EvaluationData[] = [
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
+  speechDuration: number = 0;
+  wordCount: number = 0;
+  averageWordLength: number = 0;
+  mostFrequentWords: string = '';
+
   dailySpeeches: Speech[] = [];
   weeklySpeeches: Speech[] = [];
   monthlySpeeches: Speech[] = [];
@@ -93,6 +98,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['ID', 'Operator', 'Musteri', 'Date', 'Time', 'Puan'];
 
   selectedSpeech: Speech | null = null;
+  selectedEvaluation: EvaluationData | null = null; // Added selectedEvaluation
+  showSpeechDetail: boolean = false; // Added showSpeechDetail
 
   evaluationDataSource = new MatTableDataSource(ELEMENT_DATA);
   evaluationDisplayedColumns: string[] = ['cagriId', 'degerlendirmeDurumu', 'asistanSicil', 'asistanAdiSoyadi', 'cagriTarihi', 'cagriSuresi', 'degerlendireninAdi', 'degerlendirmeNo', 'degerlendirmePuani']; // Added cagriSuresi
@@ -126,6 +133,19 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   onRowClick(speech: Speech) {
     this.selectedSpeech = speech;
     console.log('Selected Speech:', this.selectedSpeech);
+  }
+
+  // New method to handle row clicks on the evaluation table
+  onEvaluationRowClick(evaluation: EvaluationData) {
+    this.selectedEvaluation = evaluation;
+    this.showSpeechDetail = true;
+    console.log('Selected Evaluation:', this.selectedEvaluation);
+  }
+
+  // New method to go back to the evaluation list
+  goBackToList() {
+    this.selectedEvaluation = null;
+    this.showSpeechDetail = false;
   }
 
   // Pagination handlers

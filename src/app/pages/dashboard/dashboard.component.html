@@ -2,13 +2,16 @@
   <div class="main-content">
     <div class="evaluation-list-container">
       <mat-card class="full-height evaluation-list-card">
-        <mat-card-header>
+        <mat-card-header [class.speech-detail-header]="showSpeechDetail">
+          <button mat-icon-button *ngIf="showSpeechDetail" (click)="goBackToList()" class="back-button">
+            <mat-icon>arrow_back_ios</mat-icon>
+          </button>
           <mat-icon mat-card-avatar>list_alt</mat-icon>
-          <mat-card-title>Değerlendirme Listesi</mat-card-title>
+          <mat-card-title>{{ showSpeechDetail ? 'Konuşma Detayları' : 'Değerlendirme Listesi' }}</mat-card-title>
         </mat-card-header>
         <mat-card-content class="scrollable-content">
-          <div class="table-container">
-            <table mat-table [dataSource]="evaluationDataSource" class="compact-table" style="width: 100%;" matSort>
+          <div *ngIf="!showSpeechDetail" class="table-container">
+            <table mat-table [dataSource]="evaluationDataSource" class="compact-table" style="width: 100%;" matSort #evaluationSort="matSort">
               <!-- Çağrı ID Column -->
               <ng-container matColumnDef="cagriId">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Çağrı ID </th>
@@ -64,8 +67,57 @@
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="evaluationDisplayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: evaluationDisplayedColumns;"></tr>
+              <tr mat-row *matRowDef="let row; columns: evaluationDisplayedColumns;" (click)="onEvaluationRowClick(row)"></tr>
             </table>
+          </div>
+
+          <div *ngIf="showSpeechDetail && selectedEvaluation" class="speech-details-view">
+            <h3>Konuşma Detayları</h3>
+            <div class="detail-columns">
+              <!-- Left Column -->
+              <div class="detail-column">
+                <div class="detail-item">
+                  <mat-icon>badge</mat-icon>
+                  <p><strong>Çağrı ID:</strong> {{selectedEvaluation.cagriId}}</p>
+                </div>
+                <div class="detail-item">
+                  <mat-icon>check_circle_outline</mat-icon>
+                  <p><strong>Değerlendirme Durumu:</strong> {{selectedEvaluation.degerlendirmeDurumu}}</p>
+                </div>
+                <div class="detail-item">
+                  <mat-icon>person_outline</mat-icon>
+                  <p><strong>Asistan Sicil:</strong> {{selectedEvaluation.asistanSicil}}</p>
+                </div>
+                <div class="detail-item">
+                  <mat-icon>person</mat-icon>
+                  <p><strong>Asistanın Adı Soyadı:</strong> {{selectedEvaluation.asistanAdiSoyadi}}</p>
+                </div>
+                <div class="detail-item">
+                  <mat-icon>star_rate</mat-icon>
+                  <p><strong>Değerlendirme Puanı:</strong> {{selectedEvaluation.degerlendirmePuani}}</p>
+                </div>
+              </div>
+              
+              <!-- Right Column -->
+              <div class="detail-column">
+                <div class="detail-item">
+                  <mat-icon>calendar_today</mat-icon>
+                  <p><strong>Çağrı Tarihi:</strong> {{selectedEvaluation.cagriTarihi | date:'short'}}</p>
+                </div>
+                <div class="detail-item">
+                  <mat-icon>timer</mat-icon>
+                  <p><strong>Çağrı Süresi:</strong> {{selectedEvaluation.cagriSuresi}}</p>
+                </div>
+                <div class="detail-item">
+                  <mat-icon>assignment_ind</mat-icon>
+                  <p><strong>Değerlendirenin Adı:</strong> {{selectedEvaluation.degerlendireninAdi}}</p>
+                </div>
+                <div class="detail-item">
+                  <mat-icon>format_list_numbered</mat-icon>
+                  <p><strong>Değerlendirme No:</strong> {{selectedEvaluation.degerlendirmeNo}}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </mat-card-content>
       </mat-card>

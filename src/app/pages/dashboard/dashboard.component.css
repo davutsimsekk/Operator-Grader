@@ -28,19 +28,6 @@
   color: var(--text-color);
 }
 
-mat-grid-list {
-  flex: 1;
-  padding: 8px;
-  height: calc(100vh - 90px);
-}
-
-mat-grid-tile {
-  padding: 0;
-  transition: var(--transition);
-  height: 100%;
-  overflow: hidden;
-}
-
 /* Card styling */
 mat-card {
   height: 100%;
@@ -61,23 +48,6 @@ mat-card.full-height {
   border-top: 3px solid var(--primary-color);
 }
 
-mat-grid-tile:nth-child(1) mat-card {
-  border-top-color: var(--success-color);
-}
-
-mat-grid-tile:nth-child(2) mat-card.speech-info-card {
-  border-top-color: var(--primary-color);
-  background: linear-gradient(to bottom, rgba(86, 103, 255, 0.05) 0%, rgba(255, 255, 255, 1) 100%);
-}
-
-mat-grid-tile:nth-child(3) mat-card {
-  border-top-color: var(--warning-color);
-}
-
-mat-grid-tile:nth-child(4) mat-card {
-  border-top-color: var(--danger-color);
-}
-
 mat-card-content {
   flex: 1;
   overflow: hidden;
@@ -92,6 +62,49 @@ mat-card-header {
   background: linear-gradient(to right, rgba(86, 103, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
 }
 
+.speech-detail-header {
+  display: flex;
+  align-items: center;
+}
+
+.detail-items {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.detail-item {
+  width: 50%; /* Each item takes up 50% of the container width */
+  margin-bottom: 10px; /* Add some spacing between items */
+}
+
+.speech-detail-header .back-button {
+  order: -1; /* Place the button first */
+  margin-right: 16px; /* Add right margin */
+  padding: 6px; /* Reduced padding */
+  border-radius: 50%; /* Make it round */
+  background-color: rgba(86, 103, 255, 0.2); /* Less white background */
+  color: var(--primary-dark); /* Use primary color for icon */
+  transition: background-color 0.2s ease-in-out;
+  min-width: 36px; /* Reduced min-width */
+  height: 36px; /* Reduced height */
+  line-height: 36px; /* Vertically center icon */
+}
+
+.speech-detail-header .back-button:hover {
+  background-color: rgba(86, 103, 255, 0.3); /* Darker background on hover */
+}
+
+.speech-detail-header .mat-card-avatar {
+  order: 0; /* Place the icon second */
+  margin-left: 8px; /* Add space between button and icon */
+}
+
+.speech-detail-header .mat-card-title {
+  order: 1; /* Place the title third */
+  flex-grow: 1; /* Allow the title to take up remaining space */
+  margin-left: 8px; /* Add space between icon and title */
+}
+
 .mat-mdc-card-header {
   padding: 16px;
 }
@@ -104,27 +117,11 @@ mat-card-header {
   letter-spacing: 0.5px;
 }
 
-.mat-mdc-list-item {
-  cursor: pointer;
-}
-
-.sound-graph-container {
-  padding: 12px;
-  margin: 12px;
-  height: 150px;
-}
-
 .full-height {
   height: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-}
-
-.full-width {
-  width: 99%;
-  box-sizing: border-box;
-  margin: 3px; /* Reduced margin */
 }
 
 /* Table container styling fixes */
@@ -191,25 +188,6 @@ mat-grid-tile:nth-child(3) mat-card-content,
 mat-grid-tile:nth-child(4) mat-card-content {
   padding: 0; /* Remove padding from card content for better table fit */
   overflow: hidden;
-}
-
-/* Add specific width controls for each column type */
-.mat-column-speechId {
-  width: 15%;
-  min-width: 40px;
-}
-
-.mat-column-operatorName {
-  width: 30%;
-}
-
-.mat-column-customerName {
-  width: 30%;
-}
-
-.mat-column-pointOfSpeech {
-  width: 25%;
-  text-align: center;
 }
 
 /* Make rows more compact */
@@ -316,19 +294,6 @@ tr.selected::after {
   animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Two column layout for speech details */
-.two-column-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-}
-
-.detail-column {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
 .detail-item {
   display: flex;
   align-items: center;
@@ -407,28 +372,6 @@ tr.selected::after {
   border-top-right-radius: 8px;
 }
 
-/* Empty state styling */
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: var(--text-light);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(248, 250, 252, 0.7) 100%);
-  border-radius: var(--border-radius);
-  padding: 32px;
-}
-
-.empty-state mat-icon {
-  font-size: 64px;
-  height: 64px;
-  width: 64px;
-  margin-bottom: 24px;
-  opacity: 0.5;
-  color: var(--primary-color);
-}
-
 .table-container {
   display: flex;
   flex-direction: column;
@@ -483,11 +426,6 @@ mat-card-content {
   display: flex;
   flex-direction: column;
   min-height: 0; /* Important for flex child scrolling */
-  overflow: hidden;
-}
-
-/* Update grid tile styles */
-mat-grid-tile {
   overflow: hidden;
 }
 
@@ -734,7 +672,7 @@ mat-expansion-panel mat-card-content {
   flex-direction: row;
   gap: 16px; /* Space between speech details and tables */
   flex: 1;
-  overflow: hidden; /* Hide overflow to prevent layout issues */
+  overflow: hidden;
 }
 
 .tables-container {
@@ -744,4 +682,74 @@ mat-expansion-panel mat-card-content {
   flex-direction: column;
   gap: 16px; /* Space between expansion panels */
   overflow-y: auto; /* Add vertical scrolling */
+}
+
+.konusma-bilgisi .detail-items {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.konusma-bilgisi .detail-item {
+  width: 50%; /* Each item takes up 50% of the container width */
+  margin-bottom: 10px; /* Add some spacing between items */
+}
+
+/* Konusma Bilgisi Styles */
+.konusma-bilgisi .detail-items {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.konusma-bilgisi .detail-item {
+  width: 50%;
+  margin-bottom: 10px;
+  
+}
+
+.detail-columns {
+  display: flex;
+  width: 100%;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.detail-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.speech-details-view {
+  padding: 20px;
+}
+
+.speech-details-view h3 {
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(86, 103, 255, 0.2);
+}
+
+.speech-details-view .detail-item {
+  width: 100%;
+  margin-bottom: 0;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: var(--transition);
+}
+
+
+
+/* Konusma Bilgisi Styles */
+.konusma-bilgisi .detail-items {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.konusma-bilgisi .detail-item {
+  width: 50%;
+  margin-bottom: 10px;
 }
