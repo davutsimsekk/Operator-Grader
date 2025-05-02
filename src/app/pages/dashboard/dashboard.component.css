@@ -153,7 +153,7 @@ mat-card-header {
 
 /* Table sizing fixes */
 .compact-table {
-  display: block;
+  /* display: block; /* Removed display: block */
   width: 100%;
   height: calc(100% - 56px); /* Account for paginator */
   overflow: auto;
@@ -571,8 +571,89 @@ mat-card.full-height {
 }
 
 .speech-details-container {
-  flex: 4; /* Adjust flex values to control width ratio */
+  flex: 1; /* Adjust flex values to control width ratio */
   min-width: 0; /* Allow shrinking */
+}
+
+.evaluation-list-container {
+  flex: 5 ; /* Adjust flex values as needed */
+  min-width: 0; /* Allow shrinking */
+}
+
+.evaluation-list-card {
+  border-top-color: var(--primary-color); /* Or another color */
+}
+
+.evaluation-list-card .mat-card-header {
+  background: linear-gradient(to right, rgba(86, 103, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.evaluation-list-card .mat-card-title {
+  color: var(--primary-dark);
+}
+
+.evaluation-list-card .table-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.evaluation-list-card .mat-mdc-table {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto !important;
+  width: 100%; /* Ensure table takes full width */
+  table-layout: fixed; /* Distribute column widths evenly */
+  /* display: block; /* Removed display: block */
+}
+
+.evaluation-list-card .mat-mdc-table-wrapper {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.evaluation-list-card .mat-mdc-header-row {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+}
+
+.evaluation-list-card .compact-table th,
+.evaluation-list-card .compact-table td {
+  padding: 4px 2px; /* Further reduced padding */
+  white-space: normal; /* Allow text wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+  word-break: break-word; /* Break long words */
+}
+
+.evaluation-list-card .compact-table th {
+  line-height: 1.2; /* Adjust line height for two rows */
+  height: auto; /* Allow height to adjust based on content */
+  width: 1%;
+}
+
+/* Set percentage widths for evaluation table columns */
+/* .evaluation-list-card .mat-column-cagriId { width: 8%; }
+.evaluation-list-card .mat-column-degerlendirmeDurumu { width: 12%; }
+.evaluation-list-card .mat-column-asistanSicil { width: 8%; }
+.evaluation-list-card .mat-column-asistanAdiSoyadi { width: 15%; }
+.evaluation-list-card .mat-column-cagriTarihi { width: 12%; }
+.evaluation-list-card .mat-column-cagriSuresi { width: 8%; }
+.evaluation-list-card .mat-column-degerlendireninAdi { width: 15%; }
+.evaluation-list-card .mat-column-degerlendirmeNo { width: 10%; }
+.evaluation-list-card .mat-column-degerlendirmePuani { width: 12%; } */
+
+/* Ensure no extra padding on the card content */
+.evaluation-list-card .mat-card-content {
+  padding: 0 !important;
+}
+
+/* Ensure no extra padding on the table container */
+.evaluation-list-card .table-container {
+  padding: 0 !important;
 }
 
 .tables-container {
@@ -661,6 +742,6 @@ mat-expansion-panel mat-card-content {
   min-width: 0; /* Allow shrinking */
   display: flex;
   flex-direction: column;
-  gap: 8px; /* Space between expansion panels */
+  gap: 16px; /* Space between expansion panels */
   overflow-y: auto; /* Add vertical scrolling */
 }

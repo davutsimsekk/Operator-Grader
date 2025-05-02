@@ -1,50 +1,71 @@
 <div class="dashboard-container">
   <div class="main-content">
-    <div class="speech-details-container">
-      <mat-card class="full-height speech-info-card">
+    <div class="evaluation-list-container">
+      <mat-card class="full-height evaluation-list-card">
         <mat-card-header>
-          <mat-icon mat-card-avatar>record_voice_over</mat-icon>
-          <mat-card-title>Konuşma Bilgisi</mat-card-title>
+          <mat-icon mat-card-avatar>list_alt</mat-icon>
+          <mat-card-title>Değerlendirme Listesi</mat-card-title>
         </mat-card-header>
-        <mat-card-content>
-          <div *ngIf="selectedSpeech" class="speech-details">
-            <h3>Konuşma Detayları</h3>
-            <div class="two-column-grid">
-              <!-- Left Column -->
-              <div class="detail-column">
-                <div class="detail-item">
-                  <mat-icon>badge</mat-icon>
-                  <p><strong>Konuşma ID:</strong> {{selectedSpeech.ID}}</p>
-                </div>
-                <div class="detail-item">
-                  <mat-icon>person</mat-icon>
-                  <p><strong>Operatör:</strong> {{selectedSpeech.Operator}}</p>
-                </div>
-                <div class="detail-item">
-                  <mat-icon>timer</mat-icon>
-                  <p><strong>Konuşma Süresi:</strong> {{selectedSpeech.KonusmaSuresi}}</p>
-                </div>
-              </div>
-              <!-- Right Column -->
-              <div class="detail-column">
-                <div class="detail-item">
-                  <mat-icon>people</mat-icon>
-                  <p><strong>Müşteri:</strong> {{selectedSpeech.Musteri}}</p>
-                </div>
-                <div class="detail-item">
-                  <mat-icon>star_rate</mat-icon>
-                  <p><strong>Konuşma Puanı:</strong>
-                    <span class="point-badge" [ngClass]="{'high-points': selectedSpeech.Puan > 80, 'medium-points': selectedSpeech.Puan >= 60 && selectedSpeech.Puan <= 80, 'low-points': selectedSpeech.Puan < 60}">
-                      {{selectedSpeech.Puan}}
-                    </span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="!selectedSpeech" class="empty-state">
-            <mat-icon>touch_app</mat-icon>
-            <p>Detayları Görmek İçin Bir Konuşma Seçin</p>
+        <mat-card-content class="scrollable-content">
+          <div class="table-container">
+            <table mat-table [dataSource]="evaluationDataSource" class="compact-table" style="width: 100%;" matSort>
+              <!-- Çağrı ID Column -->
+              <ng-container matColumnDef="cagriId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Çağrı ID </th>
+                <td mat-cell *matCellDef="let element"> {{element.cagriId}} </td>
+              </ng-container>
+
+              <!-- Değerlendirme Durumu Column -->
+              <ng-container matColumnDef="degerlendirmeDurumu">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Değerlendirme Durumu </th>
+                <td mat-cell *matCellDef="let element"> {{element.degerlendirmeDurumu}} </td>
+              </ng-container>
+
+              <!-- Asistan Sicil Column -->
+              <ng-container matColumnDef="asistanSicil">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Asistan Sicil </th>
+                <td mat-cell *matCellDef="let element"> {{element.asistanSicil}} </td>
+              </ng-container>
+
+              <!-- Asistanın Adı Soyadı Column -->
+              <ng-container matColumnDef="asistanAdiSoyadi">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Asistanın Adı Soyadı </th>
+                <td mat-cell *matCellDef="let element"> {{element.asistanAdiSoyadi}} </td>
+              </ng-container>
+
+              <!-- Çağrı Tarihi Column -->
+              <ng-container matColumnDef="cagriTarihi">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Çağrı Tarihi </th>
+                <td mat-cell *matCellDef="let element"> {{element.cagriTarihi | date:'short'}} </td>
+              </ng-container>
+
+              <!-- Çağrı Süresi Column -->
+              <ng-container matColumnDef="cagriSuresi">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Çağrı Süresi </th>
+                <td mat-cell *matCellDef="let element"> {{element.cagriSuresi}} </td>
+              </ng-container>
+
+              <!-- Değerlendirenin Adı Column -->
+              <ng-container matColumnDef="degerlendireninAdi">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Değerlendirenin Adı </th>
+                <td mat-cell *matCellDef="let element"> {{element.degerlendireninAdi}} </td>
+              </ng-container>
+
+              <!-- Değerlendirme No Column -->
+              <ng-container matColumnDef="degerlendirmeNo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Değerlendirme No </th>
+                <td mat-cell *matCellDef="let element"> {{element.degerlendirmeNo}} </td>
+              </ng-container>
+
+              <!-- Değerlendirme Puanı Column -->
+              <ng-container matColumnDef="degerlendirmePuani">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Değerlendirme Puanı </th>
+                <td mat-cell *matCellDef="let element"> {{element.degerlendirmePuani}} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="evaluationDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: evaluationDisplayedColumns;"></tr>
+            </table>
           </div>
         </mat-card-content>
       </mat-card>
