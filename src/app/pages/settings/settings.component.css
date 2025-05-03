@@ -1,0 +1,60 @@
+.settings-container {
+  padding: 16px;
+  height: calc(100vh - 64px); /* Subtract the height of the navbar */
+  box-sizing: border-box;
+}
+
+.full-height {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card-header {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background: linear-gradient(to right, rgba(86, 103, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+mat-card-content {
+  flex: 1;
+  overflow: auto;
+}
+
+.tab-content {
+  padding: 24px 16px;
+}
+
+.settings-section {
+  margin-bottom: 32px;
+}
+
+.settings-section h3 {
+  color: var(--primary-dark);
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(86, 103, 255, 0.2);
+}
+
+.setting-item {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.setting-item mat-form-field {
+  width: 100%;
+  max-width: 400px;
+}
+
+.settings-actions {
+  margin-top: 24px;
+}
+
+mat-tab-group {
+  height: 100%;
+}

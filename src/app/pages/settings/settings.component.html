@@ -1,1 +1,80 @@
-<p>settings works!</p>
+<div class="settings-container">
+  <mat-card class="full-height">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>settings</mat-icon>
+      <mat-card-title>Ayarlar</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-tab-group animationDuration="0ms">
+        <mat-tab label="Genel Ayarlar">
+          <div class="tab-content">
+            <div class="settings-section">
+              <h3>Arayüz Ayarları</h3>
+              
+              <div class="setting-item">
+                <mat-form-field appearance="outline">
+                  <mat-label>Dil</mat-label>
+                  <mat-select [(ngModel)]="language">
+                    <mat-option value="tr">Türkçe</mat-option>
+                    <mat-option value="en">İngilizce</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              
+              <div class="setting-item">
+                <mat-slide-toggle [(ngModel)]="darkMode">
+                  Karanlık Mod
+                </mat-slide-toggle>
+              </div>
+            </div>
+            
+            <div class="settings-section">
+              <h3>Bildirim Ayarları</h3>
+              <div class="setting-item">
+                <mat-slide-toggle [(ngModel)]="emailNotifications">
+                  E-posta Bildirimleri
+                </mat-slide-toggle>
+              </div>
+            </div>
+            
+            <div class="settings-actions">
+              <button mat-flat-button color="primary" (click)="saveGeneralSettings()">
+                <mat-icon>save</mat-icon>
+                Değişiklikleri Kaydet
+              </button>
+            </div>
+          </div>
+        </mat-tab>
+        
+        <mat-tab label="Sistem Ayarları">
+          <div class="tab-content">
+            <div class="settings-section">
+              <h3>API Yapılandırması</h3>
+              
+              <div class="setting-item">
+                <mat-form-field appearance="outline">
+                  <mat-label>API Endpoint</mat-label>
+                  <input matInput [(ngModel)]="apiEndpoint">
+                </mat-form-field>
+              </div>
+              
+              <div class="setting-item">
+                <mat-form-field appearance="outline">
+                  <mat-label>Yenileme Aralığı (dakika)</mat-label>
+                  <input matInput type="number" [(ngModel)]="refreshInterval">
+                </mat-form-field>
+              </div>
+            </div>
+            
+            <div class="settings-actions">
+              <button mat-flat-button color="primary" (click)="saveSystemSettings()">
+                <mat-icon>save</mat-icon>
+                Değişiklikleri Kaydet
+              </button>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>

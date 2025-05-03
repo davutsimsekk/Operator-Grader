@@ -1,0 +1,46 @@
+<mat-toolbar color="primary" class="app-navbar">
+  <div class="navbar-container">
+    <!-- Logo/Brand -->
+    <div class="navbar-brand">
+      <a routerLink="/dashboard">
+        <span class="brand-text">MHRS Wind</span>
+        <span class="brand-subtitle">Operator Grader</span>
+      </a>
+    </div>
+    
+    <!-- Navigation Links -->
+    <div class="navbar-links">
+      <a mat-button routerLink="/dashboard" routerLinkActive="active-link">
+        <mat-icon>dashboard</mat-icon>
+        Değerlendirme
+      </a>
+      <a mat-button routerLink="/asistans" routerLinkActive="active-link">
+        <mat-icon>people</mat-icon>
+        Asistanlar
+      </a>
+      <a mat-button routerLink="/settings" routerLinkActive="active-link">
+        <mat-icon>settings</mat-icon>
+        Ayarlar
+      </a>
+    </div>
+    
+    <!-- User Menu -->
+    <div class="user-menu">
+      <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
+        <mat-icon>account_circle</mat-icon>
+        <span>{{ authService.getCurrentUsername() }}</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item>
+          <mat-icon>person</mat-icon>
+          <span>Profil</span>
+        </button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Çıkış</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</mat-toolbar>

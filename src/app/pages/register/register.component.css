@@ -5,12 +5,251 @@ mat-form-field {
 
 button {
   margin-top: 16px;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
 .error-message {
-  color: red;
+  color: #f44336;
+  font-size: 14px;
+  margin-top: 8px;
+  text-align: center;
 }
 
 .success-message {
-  color: green;
+  color: #4caf50;
+  font-size: 14px;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.logo-icon {
+  font-size: 64px;
+  height: 64px;
+  width: 64px;
+  margin-bottom: 16px;
+}
+
+.container {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  max-width: 100%;
+  background-color: #f5f5f5;
+}
+
+.vh-100 {
+  height: 100vh;
+}
+
+h2 {
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 28px;
+}
+
+.fw-bolder {
+  font-weight: 700;
+}
+
+.fw-medium {
+  font-weight: 500;
+}
+
+.rounded-4 {
+  border-radius: 16px;
+}
+
+.rounded-start-4 {
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+}
+
+.shadow-lg {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Bootstrap-like utility classes */
+.d-md-flex {
+  display: flex;
+}
+
+.d-none {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .d-md-flex {
+    display: flex !important;
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-white {
+  color: white;
+}
+
+.text-primary {
+  color: #3f51b5;
+}
+
+.bg-white {
+  background-color: white;
+}
+
+.bg-primary {
+  background: linear-gradient(135deg, #3f51b5 0%, #5c6bc0 100%);
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.mb-3 {
+  margin-bottom: 1rem;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
+}
+
+.p-5 {
+  padding: 3rem;
+}
+
+.text-decoration-none {
+  text-decoration: none;
+}
+
+.d-inline-block {
+  display: inline-block;
+}
+
+/* Column layout classes */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.col-12 {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.col-10 {
+  flex: 0 0 83.333333%;
+  max-width: 83.333333%;
+}
+
+.offset-1 {
+  margin-left: 8.333333%;
+}
+
+@media (min-width: 768px) {
+  .col-md-5 {
+    flex: 0 0 41.666667%;
+    max-width: 41.666667%;
+  }
+
+  .col-md-7 {
+    flex: 0 0 58.333333%;
+    max-width: 58.333333%;
+  }
+}
+
+@media (min-width: 992px) {
+  .col-lg-8 {
+    flex: 0 0 66.666667%;
+    max-width: 66.666667%;
+  }
+
+  .offset-lg-2 {
+    margin-left: 16.666667%;
+  }
+}
+
+@media (min-width: 1400px) {
+  .col-xxl-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  .offset-xxl-3 {
+    margin-left: 25%;
+  }
+}
+
+/* Form field styles */
+::ng-deep .mat-mdc-form-field {
+  width: 100%;
+}
+
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+::ng-deep .mat-mdc-form-field-infix {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+::ng-deep .mat-mdc-form-field-focus-overlay {
+  background-color: transparent;
+}
+
+/* Button hover effect */
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(63, 81, 181, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* Link hover effect */
+a:hover {
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.centered-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 900px;
+  min-height: 450px;
+  margin: 32px 0;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.form-area {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 3rem 0;
 }
