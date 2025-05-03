@@ -4,13 +4,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [FormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, RouterLink, MatIconModule],
+  imports: [CommonModule, FormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, RouterLink, MatIconModule, MatCheckboxModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
@@ -20,6 +22,8 @@ export class RegisterComponent {
   confirmPassword = '';
   errorMessage = '';
   successMessage = '';
+  hidePassword = true;
+  hideConfirmPassword = true;
 
   constructor(private authService: AuthService, private router: Router) { }
 
@@ -30,11 +34,17 @@ export class RegisterComponent {
     }
 
     if (this.authService.register(this.username, this.password)) {
-      this.successMessage = 'Registration successful. Please login.';
+      // Kayıt başarılı olduğunda hem kayıt yapıyoruz hem de kullanıcıyı otomatik giriş yapıyoruz
+      this.authService.login(this.username, this.password);
+      this.successMessage = 'Kayıt başarılı! Dashboard sayfasına yönlendiriliyorsunuz...';
       this.errorMessage = '';
-      this.router.navigate(['/login']);
+      
+      // Kısa bir süre bekleyerek başarı mesajını görmesini sağlıyoruz
+      setTimeout(() => {
+        this.router.navigate(['/dashboard']);
+      }, 1500);
     } else {
-      this.errorMessage = 'Username already exists.';
+      this.errorMessage = 'Bu kullanıcı adı zaten kullanılıyor.';
       this.successMessage = '';
     }
   }

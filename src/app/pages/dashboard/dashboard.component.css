@@ -1,31 +1,178 @@
 /* Modern Dashboard Theme */
 :root {
-  --primary-color: #5667ff;
-  --primary-light: #7986ff;
-  --primary-dark: #4050e6;
-  --accent-color: #ff5252;
+  --primary-color: #3498db;
+  --primary-light: #5dade2;
+  --primary-dark: #2980b9;
+  --accent-color: #e74c3c;
   --success-color: #2ecc71;
-  --warning-color: #ff9800;
-  --danger-color: #f44336;
+  --warning-color: #f1c40f;
+  --danger-color: #e74c3c;
   --text-color: #2c3e50;
   --text-light: #7f8c8d;
   --background-light: #ecf0f1;
   --card-background: #ffffff;
-  --border-radius: 10px;
-  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --border-radius: 20px;
+  --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --header-height: 48px; /* Define fixed header height variable */
+  --fixed-header-height: 48px; /* Sabit header yüksekliği */
 }
 
 .dashboard-container {
   display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
-  padding: 16px;
+  padding: 24px;
   box-sizing: border-box;
-  flex-direction: column;
-  background: linear-gradient(135deg, #ecf0f1 0%, #f5f7fa 100%);
+  background: linear-gradient(135deg, #f5f7fa 0%, #ecf0f1 100%);
   color: var(--text-color);
+  gap: 24px;
+}
+
+/* Table row animations for page transitions */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animated-row {
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page-transition-animation .mat-mdc-row {
+  animation: fadeInUp 0.3s;
+  animation-fill-mode: both;
+}
+
+.page-transition-animation .mat-mdc-row:nth-child(1) { animation-delay: 0.02s; }
+.page-transition-animation .mat-mdc-row:nth-child(2) { animation-delay: 0.04s; }
+.page-transition-animation .mat-mdc-row:nth-child(3) { animation-delay: 0.06s; }
+.page-transition-animation .mat-mdc-row:nth-child(4) { animation-delay: 0.08s; }
+.page-transition-animation .mat-mdc-row:nth-child(5) { animation-delay: 0.10s; }
+.page-transition-animation .mat-mdc-row:nth-child(6) { animation-delay: 0.12s; }
+.page-transition-animation .mat-mdc-row:nth-child(7) { animation-delay: 0.14s; }
+.page-transition-animation .mat-mdc-row:nth-child(8) { animation-delay: 0.16s; }
+.page-transition-animation .mat-mdc-row:nth-child(9) { animation-delay: 0.18s; }
+.page-transition-animation .mat-mdc-row:nth-child(10) { animation-delay: 0.20s; }
+
+.main-content {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  flex: 1;
+  overflow: hidden;
+  height: calc(100vh - 200px); /* Account for sound graph card */
+}
+
+.evaluation-list-container {
+  flex: 2; /* Make evaluation list wider */
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.tables-container {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+/* Improved scrolling for the table container */
+.table-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  flex: 1;
+}
+
+/* Define a fixed height container for the table */
+.evaluation-list-container .table-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - var(--header-height)); /* Account for fixed header height */
+}
+
+/* Make sure the mat-card-content can scroll properly */
+.scrollable-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  flex: 1;
+}
+
+/* Ensure the table itself is scrollable */
+.compact-table {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: block; /* Changed back to block to fill the space */
+  overflow-y: auto;
+}
+
+/* Add scrollable styles to the container with the main table data */
+.evaluation-list-card .table-container {
+  overflow: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0; /* This is important for flexbox children to scroll */
+}
+
+/* Make sure the table wrapper itself can scroll */
+.evaluation-list-card .mat-mdc-table-wrapper {
+  overflow: auto;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Keep the header fixed while scrolling */
+.evaluation-list-card .mat-mdc-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #f5f7fa;
+  height: var(--header-height) !important;
+}
+
+/* Ensure the filter bar doesn't scroll away */
+.filter-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #f9fafc;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: none;
 }
 
 /* Card styling */
@@ -33,19 +180,51 @@ mat-card {
   height: 100%;
   display: flex;
   flex-direction: column;
-  margin: 8px;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
-  transition: var(--transition);
+  transition: box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   overflow: hidden;
+  background: var(--card-background);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 mat-card:hover {
   box-shadow: var(--hover-shadow);
+  /* Removed transform: translateY(-2px); to prevent the card from moving up */
 }
 
 mat-card.full-height {
-  border-top: 3px solid var(--primary-color);
+  border-top: 4px solid var(--primary-color);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Special handling for the evaluation list card to prevent hover movement */
+.evaluation-list-card {
+  transform: none !important;
+}
+
+mat-card-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background: linear-gradient(to right, rgba(52, 152, 219, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+  display: flex;
+  align-items: center;
+}
+
+mat-card-title {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.title-text {
+  flex: 1;
+}
+
+mat-card-title mat-icon {
+  color: var(--primary-color);
 }
 
 mat-card-content {
@@ -56,15 +235,327 @@ mat-card-content {
   flex-direction: column;
 }
 
-mat-card-header {
-  padding: 18px 16px 12px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  background: linear-gradient(to right, rgba(86, 103, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+/* Table styling */
+.table-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  flex: 1;
+}
+
+.compact-table {
+  width: 100%;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  display: block; /* Changed back to block to fill the space */
+}
+
+.mat-mdc-header-row {
+  background-color: #f5f7fa !important;
+  border-bottom: 2px solid #e0e6ed;
+  height: var(--fixed-header-height) !important;
+  min-height: var(--fixed-header-height) !important;
+  max-height: var(--fixed-header-height) !important;
+}
+
+.mat-mdc-header-cell {
+  color: #2c3e50 !important;
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
+  padding: 12px 16px !important;
+  white-space: nowrap;
+  display: table-cell; /* Use table-cell display */
+  vertical-align: middle;
+}
+
+.mat-mdc-header-cell.mat-sort-header {
+  cursor: pointer;
+}
+
+.mat-mdc-header-cell.mat-sort-header:hover {
+  background-color: #e8edf2;
+}
+
+.mat-sort-header-arrow {
+  color: #3498db !important;
+}
+
+.mat-mdc-row {
+  height: auto !important;
+  min-height: 36px !important;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.mat-mdc-row:hover {
+  background-color: #f8fafc !important;
+}
+
+.mat-mdc-row.selected {
+  background-color: rgba(52, 152, 219, 0.1) !important;
+  position: relative;
+}
+
+.mat-mdc-row.selected::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background-color: var(--primary-color);
+}
+
+.mat-mdc-cell {
+  padding: 8px 16px !important;
+  font-size: 0.9rem !important;
+  color: #4a5568 !important;
+  display: table-cell; /* Use table-cell display */
+  vertical-align: middle;
+}
+
+/* Tablo başlıkları için özel sabit yükseklik tanımı */
+:host ::ng-deep .mat-mdc-header-row {
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important; 
+}
+
+/* Tüm mat-header-row elementlerini hedefleyen daha spesifik kural */
+.mat-mdc-table .mat-mdc-header-row {
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+}
+
+/* Tablo gövdesi için esnek yükseklik */
+.mat-mdc-table .mat-mdc-row {
+  height: auto; /* İçeriğe göre ayarlanır */
+  min-height: 36px; /* Minimum yükseklik */
+}
+
+/* Başlık hücrelerinin içerik düzenlemesi */
+.mat-mdc-header-cell {
+  line-height: 48px !important;
+  height: 48px !important;
+  padding: 0 16px !important;
+  vertical-align: middle;
+  display: table-cell;
+}
+
+/* Tablo başlık arka plan ve pozisyonu */
+.mat-mdc-table thead {
+  position: sticky !important;
+  top: 0;
+  z-index: 100;
+  background-color: #f5f7fa !important;
+}
+
+/* Tablo hücreleri için düzenleme */
+.mat-mdc-cell {
+  padding: 0 16px !important;
+  height: auto !important;
+  vertical-align: middle;
+}
+
+/* MatSort başlıklarını düzgün hizalama */
+.mat-sort-header-container {
+  height: 48px !important;
+  justify-content: center;
+}
+
+/* Değerlendirme listesi tablosu için özel düzenleme */
+.evaluation-list-card .compact-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* Tüm düzeltmelerin önceliğini arttırmak için !important eklendi */
+
+/* Point badge styling */
+.point-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  min-width: 32px;
+  text-align: center;
+}
+
+.high-points {
+  background: rgba(46, 204, 113, 0.15);
+  color: #27ae60;
+}
+
+.medium-points {
+  background: rgba(241, 196, 15, 0.15);
+  color: #f39c12;
+}
+
+.low-points {
+  background: rgba(231, 76, 60, 0.15);
+  color: #c0392b;
+}
+
+/* Expansion panel styling */
+mat-expansion-panel {
+  margin-bottom: 16px;
+}
+
+mat-expansion-panel .mat-expansion-panel-body {
+  padding: 0;
+}
+
+mat-expansion-panel mat-card {
+  margin: 0;
+  box-shadow: none;
+  border: none;
+}
+
+/* Sound graph card styling */
+.sound-graph-card {
+  height: 180px;
+  margin-top: 24px;
+  border-top: 4px solid var(--accent-color);
+}
+
+.sound-graph-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: rgba(52, 152, 219, 0.02);
+  border-radius: var(--border-radius);
+  border: 2px dashed rgba(52, 152, 219, 0.2);
+}
+
+/* Paginator styling */
+.dashboard-paginator {
+  margin-top: auto;
+  background: white;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+}
+
+:host ::ng-deep .mat-mdc-paginator {
+  background: transparent;
+}
+
+:host ::ng-deep .mat-mdc-paginator-range-actions {
+  justify-content: center;
+}
+
+:host ::ng-deep .mat-mdc-paginator-navigation-previous,
+:host ::ng-deep .mat-mdc-paginator-navigation-next {
+  color: var(--primary-color);
+}
+
+/* Back button styling */
+.back-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  color: var(--primary-dark);
+  background: rgba(86, 103, 255, 0.2);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  line-height: 24px;
+  transform: scale(1);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(86, 103, 255, 0.1);
+}
+
+.back-button:hover {
+  background: rgba(86, 103, 255, 0.3);
+  transform: scale(1.05);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.back-button .mat-icon {
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+/* Detail view styling */
+.speech-details-view {
+  padding: 24px;
+}
+
+.speech-details-view h3 {
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(52, 152, 219, 0.1);
+}
+
+.detail-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: var(--transition);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.detail-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.detail-item mat-icon {
+  color: var(--primary-color);
+  background: rgba(52, 152, 219, 0.1);
+  border-radius: 50%;
+  padding: 8px;
+  margin-right: 12px;
+}
+
+.detail-item p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-light);
+}
+
+.detail-item strong {
+  color: var(--text-color);
+  font-weight: 600;
 }
 
 .speech-detail-header {
   display: flex;
   align-items: center;
+  position: relative;
+}
+
+.speech-detail-header .header-left {
+  display: flex;
+  align-items: center;
+  position: relative;
 }
 
 .detail-items {
@@ -150,7 +641,6 @@ mat-card-header {
 
 /* Table sizing fixes */
 .compact-table {
-  /* display: block; /* Removed display: block */
   width: 100%;
   height: calc(100% - 56px); /* Account for paginator */
   overflow: auto;
@@ -172,6 +662,8 @@ mat-card-header {
   z-index: 10;
   background-color: #f5f7fa; /* Match your background or use a distinct color */
   box-shadow: 0 1px 0 rgba(0,0,0,0.1); /* Bottom shadow for visual separation */
+  height: var(--fixed-header-height) !important;
+  line-height: var(--fixed-header-height) !important;
 }
 
 /* Fix for the header cells */
@@ -179,7 +671,8 @@ mat-card-header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: white;
+  background: #f5f7fa;
+  height: var(--fixed-header-height) !important;
 }
 
 /* Adjust siralama card content padding */
@@ -255,409 +748,15 @@ tr.selected::after {
 
 :host ::ng-deep .mat-mdc-table {
   min-width: unset !important;
+  width: 100%;
+  height: 100%;
+  display: table;
+  flex: 1;
 }
 
 :host ::ng-deep .mat-sort-header-content {
   text-overflow: ellipsis;
   overflow: hidden;
-}
-
-.sound-graph-card {
-  height: 80%;
-  width: 80%;
-  margin: 3px;
-  box-sizing: border-box;
-  background: linear-gradient(to right bottom, #ffffff, #f8f9fa);
-  border-radius: var(--border-radius);
-  border-top: 3px solid var(--accent-color);
-}
-
-.sound-graph-wrapper {
-  width: 80%;
-  margin: 0 auto;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: var(--border-radius);
-  border: 1px dashed rgba(86, 103, 255, 0.3);
-}
-
-/* Animation for table rows */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.mat-mdc-row {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-.detail-item {
-  display: flex;
-  align-items: center;
-  padding: 16px;
-  background: #ffffff;
-  border-radius: 14px; /* Increased from 10px */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: var(--transition);
-  border: 1px solid rgba(0, 0, 0, 0.05); /* Added subtle border */
-}
-
-.detail-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.detail-item mat-icon {
-  margin-right: 12px;
-  color: var(--primary-color);
-  background: rgba(86, 103, 255, 0.1);
-  border-radius: 50%;
-  padding: 8px;
-  height: 24px;
-  width: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.detail-item p {
-  margin: 0;
-  font-size: 0.95em;
-}
-
-.detail-item strong {
-  color: var(--text-color);
-  font-weight: 600;
-}
-
-/* Point badge styling enhancements */
-.point-badge {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 16px; /* Increased border radius */
-  font-weight: 700;
-  color: white;
-  min-width: 28px;
-  text-align: center;
-  border: 1px solid rgba(0, 0, 0, 0.1); /* Added subtle border */
-}
-
-.high-points {
-  background-color: var(--success-color);
-  box-shadow: 0 2px 6px rgba(46, 204, 113, 0.3);
-  color: green;
-}
-
-.medium-points {
-  background-color: var(--warning-color);
-  box-shadow: 0 2px 6px rgba(255, 152, 0, 0.3);
-  color: greenyellow;
-}
-
-.low-points {
-  background-color: var(--danger-color);
-  box-shadow: 0 2px 6px rgba(244, 67, 54, 0.3);
-  color: red;
-}
-
-/* Better table cell styling */
-.compact-table th:first-child {
-  border-top-left-radius: 8px;
-}
-
-.compact-table th:last-child {
-  border-top-right-radius: 8px;
-}
-
-.table-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 0; /* Important for flex child scrolling */
-}
-
-/* Make the table scrollable */
-.table-container .mat-mdc-table {
-  height: 100%;
-  min-height: 0;
-  overflow-y: auto !important;
-}
-
-/* Ensure table wrapper takes available space */
-.table-container .mat-mdc-table-wrapper {
-  height: calc(100% - 56px); /* Account for paginator */
-  overflow-y: auto;
-}
-
-/* Keep header row fixed */
-.mat-mdc-header-row {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: white;
-}
-
-/* Ensure proper table layout */
-.compact-table {
-  display: block;
-  width: 100%;
-  height: calc(100% - 56px); /* Account for paginator */
-  overflow: auto;
-}
-
-/* Keep paginator at bottom */
-.dashboard-paginator {
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  z-index: 100;
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
-  min-height: 48px;
-}
-
-/* Ensure card content fills available space */
-mat-card-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0; /* Important for flex child scrolling */
-  overflow: hidden;
-}
-
-/* Ensure proper height for card */
-mat-card.full-height {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-/* Update paginator styling */
-.dashboard-paginator {
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  z-index: 100;
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
-  min-height: 48px;
-}
-
-/* Hide Items per page label */
-:host ::ng-deep .mat-mdc-paginator-page-size {
-  display: none !important;
-}
-
-/* Center range label and navigation */
-:host ::ng-deep .mat-mdc-paginator-range-actions {
-  justify-content: center;
-  width: 100%;
-}
-
-:host ::ng-deep .mat-mdc-paginator-container {
-  justify-content: center;
-  min-height: 48px;
-}
-
-/* Ensure table container accounts for paginator */
-.table-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 0;
-}
-
-.table-container .mat-mdc-table {
-  height: calc(100% - 48px);
-  min-height: 0;
-  overflow-y: auto !important;
-}
-
-/* Ensure proper spacing for the last row */
-.mat-mdc-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-/* Add some padding to the bottom of the table for better appearance */
-.mat-mdc-table tbody {
-  padding-bottom: 8px;
-}
-
-.dashboard-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-  background: linear-gradient(135deg, #ecf0f1 0%, #f5f7fa 100%);
-  color: var(--text-color);
-}
-
-.main-content {
-  display: flex;
-  flex-direction: row;
-  gap: 16px; /* Space between speech details and tables */
-  flex: 1;
-  overflow: hidden;
-}
-
-.speech-details-container {
-  flex: 1; /* Adjust flex values to control width ratio */
-  min-width: 0; /* Allow shrinking */
-}
-
-.evaluation-list-container {
-  flex: 5 ; /* Adjust flex values as needed */
-  min-width: 0; /* Allow shrinking */
-}
-
-.evaluation-list-card {
-  border-top-color: var(--primary-color); /* Or another color */
-}
-
-.evaluation-list-card .mat-card-header {
-  background: linear-gradient(to right, rgba(86, 103, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
-}
-
-.evaluation-list-card .mat-card-title {
-  color: var(--primary-dark);
-}
-
-.evaluation-list-card .table-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 0;
-}
-
-.evaluation-list-card .mat-mdc-table {
-  height: 100%;
-  min-height: 0;
-  overflow-y: auto !important;
-  width: 100%; /* Ensure table takes full width */
-  table-layout: fixed; /* Distribute column widths evenly */
-  /* display: block; /* Removed display: block */
-}
-
-.evaluation-list-card .mat-mdc-table-wrapper {
-  height: 100%;
-  overflow-y: auto;
-}
-
-.evaluation-list-card .mat-mdc-header-row {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: white;
-}
-
-.evaluation-list-card .compact-table th,
-.evaluation-list-card .compact-table td {
-  padding: 4px 2px; /* Further reduced padding */
-  white-space: normal; /* Allow text wrapping */
-  overflow: hidden;
-  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
-  word-break: break-word; /* Break long words */
-}
-
-.evaluation-list-card .compact-table th {
-  line-height: 1.2; /* Adjust line height for two rows */
-  height: auto; /* Allow height to adjust based on content */
-  width: 1%;
-}
-
-/* Set percentage widths for evaluation table columns */
-/* .evaluation-list-card .mat-column-cagriId { width: 8%; }
-.evaluation-list-card .mat-column-degerlendirmeDurumu { width: 12%; }
-.evaluation-list-card .mat-column-asistanSicil { width: 8%; }
-.evaluation-list-card .mat-column-asistanAdiSoyadi { width: 15%; }
-.evaluation-list-card .mat-column-cagriTarihi { width: 12%; }
-.evaluation-list-card .mat-column-cagriSuresi { width: 8%; }
-.evaluation-list-card .mat-column-degerlendireninAdi { width: 15%; }
-.evaluation-list-card .mat-column-degerlendirmeNo { width: 10%; }
-.evaluation-list-card .mat-column-degerlendirmePuani { width: 12%; } */
-
-/* Ensure no extra padding on the card content */
-.evaluation-list-card .mat-card-content {
-  padding: 0 !important;
-}
-
-/* Ensure no extra padding on the table container */
-.evaluation-list-card .table-container {
-  padding: 0 !important;
-}
-
-.tables-container {
-  flex: 1; /* Adjust flex values to control width ratio */
-  min-width: 0; /* Allow shrinking */
-  display: flex;
-  flex-direction: column;
-  gap: 8px; /* Space between expansion panels */
-  overflow-y: auto; /* Add vertical scrolling */
-}
-
-mat-accordion {
-  display: flex;
-  flex-direction: column;
-  gap: 8px; /* Space between expansion panels */
-}
-
-mat-expansion-panel {
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  transition: var(--transition);
-  border-top: 3px solid var(--primary-color); /* Default border color */
-}
-
-mat-expansion-panel:hover {
-  box-shadow: var(--hover-shadow);
-}
-
-mat-expansion-panel-header {
-  padding: 0 16px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  background: linear-gradient(to right, rgba(86, 103, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
-}
-
-mat-panel-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--primary-dark);
-  letter-spacing: 0.5px;
-}
-
-/* Specific border colors for each table's expansion panel */
-mat-accordion mat-expansion-panel:nth-child(1) {
-  border-top-color: var(--success-color);
-}
-
-mat-accordion mat-expansion-panel:nth-child(2) {
-  border-top-color: var(--warning-color);
-}
-
-mat-accordion mat-expansion-panel:nth-child(3) {
-  border-top-color: var(--danger-color);
-}
-
-mat-expansion-panel .mat-expansion-panel-body {
-  padding: 0;
-}
-
-mat-expansion-panel mat-card {
-  margin: 0; /* Remove margin from card inside panel */
-  box-shadow: none; /* Remove shadow from card inside panel */
-  border-top: none; /* Remove border from card inside panel */
-}
-
-mat-expansion-panel mat-card-content {
-  padding: 0;
 }
 
 .sound-graph-card {
@@ -673,15 +772,6 @@ mat-expansion-panel mat-card-content {
   gap: 16px; /* Space between speech details and tables */
   flex: 1;
   overflow: hidden;
-}
-
-.tables-container {
-  flex: 1; /* Adjust flex values to control width ratio */
-  min-width: 0; /* Allow shrinking */
-  display: flex;
-  flex-direction: column;
-  gap: 16px; /* Space between expansion panels */
-  overflow-y: auto; /* Add vertical scrolling */
 }
 
 .konusma-bilgisi .detail-items {
@@ -741,8 +831,6 @@ mat-expansion-panel mat-card-content {
   transition: var(--transition);
 }
 
-
-
 /* Konusma Bilgisi Styles */
 .konusma-bilgisi .detail-items {
   display: flex;
@@ -752,4 +840,427 @@ mat-expansion-panel mat-card-content {
 .konusma-bilgisi .detail-item {
   width: 50%;
   margin-bottom: 10px;
+}
+
+/* Make sure the table takes full width */
+:host ::ng-deep .mat-mdc-table {
+  width: 100%;
+}
+
+/* Ensure table rows take full width */
+:host ::ng-deep .mat-mdc-row,
+:host ::ng-deep .mat-mdc-header-row {
+  width: 100%;
+}
+
+.page-selector-dropdown.right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+.page-selector-field.small {
+  min-width: 40px;
+  max-width: 55px;
+  margin-right: 2px;
+  font-size: 12px;
+}
+
+.page-selector-label {
+  font-size: 0.85em;
+  color: var(--text-light);
+  margin-left: 2px;
+}
+
+/* Konuşma Detayları two-column layout */
+.speech-details-view .detail-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 32px;
+}
+
+.speech-details-view .detail-item {
+  width: 100%;
+  min-width: 220px;
+  margin-bottom: 0;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: var(--transition);
+  padding: 12px 10px;
+  font-size: 0.97em;
+}
+
+@media (max-width: 900px) {
+  .speech-details-view .detail-items {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Remove old custom paginator styles if not used anymore */
+.custom-paginator { display: none; }
+
+/* Filter bar styling - updated for better visibility */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px;
+  background-color: #f9fafc;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  align-items: center;
+  position: relative;
+  z-index: 5; /* Ensure filter bar stays above other content */
+}
+
+.filter-field {
+  flex: 1;
+  min-width: 150px;
+  margin-bottom: 0;
+}
+
+.filter-field.short {
+  min-width: 100px;
+  max-width: 120px;
+}
+
+.filter-field.long {
+  min-width: 180px;
+}
+
+.clear-filters {
+  height: 36px;
+  padding: 0 16px;
+  margin-left: auto;
+  font-weight: 500;
+}
+
+/* Make Angular Material form fields more visible */
+:host ::ng-deep .filter-bar .mat-mdc-form-field {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+:host ::ng-deep .filter-bar .mat-mdc-text-field-wrapper {
+  background-color: white;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+}
+
+:host ::ng-deep .filter-bar .mat-mdc-form-field-flex {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+:host ::ng-deep .filter-bar .mat-mdc-form-field-infix {
+  padding: 8px 0;
+  width: auto;
+}
+
+:host ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+/* Ensure datepicker is visible */
+:host ::ng-deep .mat-datepicker-content {
+  z-index: 1000 !important;
+}
+
+/* Ensure dropdown selects are visible */
+:host ::ng-deep .mat-mdc-select-panel {
+  z-index: 1000 !important;
+}
+
+/* Responsive adjustments for filter bar */
+@media (max-width: 1200px) {
+  .filter-bar {
+    flex-wrap: wrap;
+  }
+  
+  .filter-field {
+    min-width: 120px;
+  }
+  
+  .filter-field.short {
+    min-width: 80px;
+  }
+  
+  .filter-field.long {
+    min-width: 140px;
+  }
+}
+
+@media (max-width: 768px) {
+  .filter-field {
+    min-width: calc(50% - 12px);
+  }
+}
+
+/* Filter toggle button styling */
+.filter-toggle-btn {
+  margin-left: auto;
+  color: var(--primary-dark);
+  background-color: rgba(52, 152, 219, 0.1);
+  position: relative;
+}
+
+.filter-toggle-btn:hover {
+  background-color: rgba(52, 152, 219, 0.2);
+}
+
+.filters-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
+  color: var(--accent-color);
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Header layout for filter button positioning */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Arama ikonu stilleri */
+.search-toggle-btn {
+  color: var(--primary-dark);
+  background-color: rgba(52, 152, 219, 0.1);
+  transition: all 0.2s ease-in-out;
+  z-index: 5; /* İkonu üstte tutmak için */
+}
+
+.search-toggle-btn:hover {
+  background-color: rgba(52, 152, 219, 0.2);
+  transform: scale(1.05);
+}
+
+/* Arama kutusu stilleri */
+.search-box {
+  position: absolute;
+  right: 110px; /* Daha sola kaydırıldı (86px -> 110px) */
+  z-index: 4;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.search-field {
+  width: 250px;
+  margin-bottom: 0;
+}
+
+:host ::ng-deep .search-field .mat-mdc-text-field-wrapper {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  padding-left: 12px;
+  height: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(52, 152, 219, 0.2);
+}
+
+:host ::ng-deep .search-field .mat-mdc-form-field-flex {
+  padding-top: 0;
+  padding-bottom: 0;
+  min-height: 40px;
+  align-items: center;
+}
+
+:host ::ng-deep .search-field .mat-mdc-form-field-infix {
+  padding: 8px 0;
+}
+
+:host ::ng-deep .search-field .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+:host ::ng-deep .search-field .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+:host ::ng-deep .search-field mat-label {
+  font-size: 14px;
+}
+
+:host ::ng-deep .search-field input {
+  font-size: 14px;
+}
+
+/* Arama kutusu stilleri */
+.search-box {
+  margin-right: 8px;
+}
+
+.search-field {
+  width: 250px;
+  margin-bottom: 0;
+}
+
+:host ::ng-deep .search-field .mat-mdc-text-field-wrapper {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  padding-left: 4px;
+  height: 40px;
+}
+
+:host ::ng-deep .search-field .mat-mdc-form-field-flex {
+  padding-top: 0;
+  padding-bottom: 0;
+  min-height: 40px;
+  align-items: center;
+}
+
+:host ::ng-deep .search-field .mat-mdc-form-field-infix {
+  padding: 6px 0;
+}
+
+:host ::ng-deep .search-field .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+:host ::ng-deep .search-field .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+:host ::ng-deep .search-field mat-label {
+  font-size: 14px;
+}
+
+:host ::ng-deep .search-field input {
+  font-size: 14px;
+}
+
+/* Filter toggle button styling - positioned on the right */
+.filter-toggle-btn {
+  color: var(--primary-dark);
+  background-color: rgba(52, 152, 219, 0.1);
+  position: relative;
+}
+
+.filter-toggle-btn:hover {
+  background-color: rgba(52, 152, 219, 0.2);
+}
+
+/* New elegant pagination styling */
+.pagination-container {
+  display: flex;
+  justify-content: flex-end; /* Changed from flex-start to flex-end to align to the right */
+  align-items: center;
+  padding: 4px 16px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.pagination-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: rgba(245, 247, 250, 0.7); /* More subtle background */
+  border: 1px solid rgba(0, 0, 0, 0.08); /* Lighter border */
+  border-radius: 16px; /* Rounded corners */
+  padding: 0;
+  height: 30px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+  overflow: hidden;
+}
+
+.page-selector {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* Improved button alignment with flexbox */
+.pagination-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--primary-color);
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.pagination-nav-btn .mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Custom styling for a more elegant and narrower dropdown selector */
+.page-selector-field {
+  width: 40px !important; /* Reduced width */
+  margin: 0;
+}
+
+:host ::ng-deep .page-selector .mat-mdc-form-field-flex {
+  padding: 0 !important;
+  height: 30px;
+}
+
+:host ::ng-deep .page-selector .mat-mdc-text-field-wrapper {
+  background-color: transparent !important;
+  padding: 0 !important;
+  height: 30px;
+  border: none !important;
+}
+
+:host ::ng-deep .page-selector .mat-mdc-form-field-infix {
+  padding: 0 !important;
+  min-height: 30px !important;
+  width: auto !important; /* Auto width to fit content */
+}
+
+:host ::ng-deep .page-selector .mdc-notched-outline {
+  display: none !important;
+}
+
+:host ::ng-deep .page-selector .mat-mdc-select-trigger {
+  height: 30px !important;
+}
+
+:host ::ng-deep .page-selector .mat-mdc-select-value {
+  padding-left: 4px; /* Less padding */
+  padding-right: 0;
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 13px; /* Smaller font */
+}
+
+:host ::ng-deep .page-selector .mat-mdc-select-arrow-wrapper {
+  padding-right: 2px; /* Less padding */
+}
+
+:host ::ng-deep .page-selector .mat-mdc-select-arrow {
+  color: var(--primary-color);
+  transform: scale(0.8); /* Smaller arrow */
 }

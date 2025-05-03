@@ -1,0 +1,238 @@
+<div class="reports-container">
+  <!-- Header -->
+  <div class="reports-header">
+    <h1>
+      <mat-icon>insights</mat-icon>
+      Performans Raporları
+    </h1>
+    
+    <!-- Time Period Selection -->
+    <div class="time-period-controls">
+      <!-- Period Tabs -->
+      <div class="period-tabs">
+        <button 
+          mat-button 
+          *ngFor="let period of periods" 
+          [class.active]="selectedPeriod === period"
+          (click)="updatePeriod(period)">
+          <mat-icon>
+            {{
+              period === 'day' ? 'today' :
+              period === 'week' ? 'view_week' :
+              period === 'month' ? 'calendar_month' :
+              period === 'quarter' ? 'calendar_view_month' : 'calendar_today'
+            }}
+          </mat-icon>
+          {{ period === 'day' ? 'Günlük' : 
+             period === 'week' ? 'Haftalık' : 
+             period === 'month' ? 'Aylık' : 
+             period === 'quarter' ? 'Üç Aylık' : 'Yıllık' }}
+        </button>
+      </div>
+      
+      <!-- Date Range Picker -->
+      <div class="date-range">
+        <mat-form-field appearance="outline">
+          <mat-label>Başlangıç Tarihi</mat-label>
+          <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" (dateChange)="onStartDateChanged()">
+          <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Bitiş Tarihi</mat-label>
+          <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" [min]="startDate" (dateChange)="applyDateFilter()">
+          <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+
+        <!-- Export Button -->
+        <button mat-raised-button color="primary" class="export-button" (click)="exportReport()">
+          <mat-icon>file_download</mat-icon>
+          Raporu İndir
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>Veriler yükleniyor...</span>
+  </div>
+  
+  <!-- Report Content -->
+  <div class="reports-content" *ngIf="!isLoading">
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+      <!-- Total Calls Card -->
+      <mat-card class="summary-card">
+        <mat-card-content>
+          <div class="card-icon">
+            <mat-icon>phone</mat-icon>
+          </div>
+          <div class="card-details">
+            <div class="card-title">Toplam Çağrı Sayısı</div>
+            <div class="card-value">{{ summary.totalCalls }}</div>
+            <div class="card-trend" [ngClass]="getTrendColor(summary.totalCallsChange)">
+              <mat-icon>{{ getTrendIcon(summary.totalCallsChange) }}</mat-icon>
+              {{ summary.totalCallsChange }}%
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      
+      <!-- Average Call Time Card -->
+      <mat-card class="summary-card">
+        <mat-card-content>
+          <div class="card-icon">
+            <mat-icon>timer</mat-icon>
+          </div>
+          <div class="card-details">
+            <div class="card-title">Ortalama Çağrı Süresi</div>
+            <div class="card-value">{{ summary.averageCallTime }}</div>
+            <div class="card-trend" [ngClass]="getTrendColor(-summary.averageCallTimeChange)">
+              <mat-icon>{{ getTrendIcon(-summary.averageCallTimeChange) }}</mat-icon>
+              {{ summary.averageCallTimeChange }}%
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      
+      <!-- Customer Satisfaction Card -->
+      <mat-card class="summary-card">
+        <mat-card-content>
+          <div class="card-icon">
+            <mat-icon>sentiment_satisfied_alt</mat-icon>
+          </div>
+          <div class="card-details">
+            <div class="card-title">Müşteri Memnuniyeti</div>
+            <div class="card-value">{{ summary.customerSatisfaction }}%</div>
+            <div class="card-trend" [ngClass]="getTrendColor(summary.customerSatisfactionChange)">
+              <mat-icon>{{ getTrendIcon(summary.customerSatisfactionChange) }}</mat-icon>
+              {{ summary.customerSatisfactionChange }}%
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      
+      <!-- Average Score Card -->
+      <mat-card class="summary-card">
+        <mat-card-content>
+          <div class="card-icon">
+            <mat-icon>star</mat-icon>
+          </div>
+          <div class="card-details">
+            <div class="card-title">Ortalama Puan</div>
+            <div class="card-value">{{ summary.averageScore }}</div>
+            <div class="card-trend" [ngClass]="getTrendColor(summary.averageScoreChange)">
+              <mat-icon>{{ getTrendIcon(summary.averageScoreChange) }}</mat-icon>
+              {{ summary.averageScoreChange }}%
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    
+    <!-- Performance Chart -->
+    <div class="chart-container">
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>analytics</mat-icon>
+          <mat-card-title>Performans Trendi</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="chart-content">
+          <div class="chart-wrapper">
+            <canvas baseChart
+              [type]="performanceChartType"
+              [data]="performanceChartData"
+              [options]="performanceChartOptions">
+            </canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    
+    <!-- Operator Performance Table -->
+    <div class="operator-table">
+      <mat-card>
+        <mat-card-header>
+          <mat-icon mat-card-avatar>groups</mat-icon>
+          <mat-card-title>Operatör Performansı</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <table mat-table [dataSource]="operatorPerformanceData" class="performance-table">
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Asistan</th>
+              <td mat-cell *matCellDef="let operator">{{ operator.name }}</td>
+            </ng-container>
+            
+            <!-- Average Score Column -->
+            <ng-container matColumnDef="averageScore">
+              <th mat-header-cell *matHeaderCellDef>Ortalama Puan</th>
+              <td mat-cell *matCellDef="let operator">
+                <div class="score-container">
+                  <span class="score">{{ operator.averageScore }}</span>
+                  <mat-progress-bar mode="determinate" 
+                    [value]="operator.averageScore"
+                    [ngClass]="{
+                      'score-high': operator.averageScore >= 80,
+                      'score-medium': operator.averageScore >= 60 && operator.averageScore < 80,
+                      'score-low': operator.averageScore < 60
+                    }">
+                  </mat-progress-bar>
+                </div>
+              </td>
+            </ng-container>
+            
+            <!-- Calls Handled Column -->
+            <ng-container matColumnDef="callsHandled">
+              <th mat-header-cell *matHeaderCellDef>Çağrı Sayısı</th>
+              <td mat-cell *matCellDef="let operator">{{ operator.callsHandled }}</td>
+            </ng-container>
+            
+            <!-- Customer Satisfaction Column -->
+            <ng-container matColumnDef="customerSatisfaction">
+              <th mat-header-cell *matHeaderCellDef>Müşteri Memnuniyeti</th>
+              <td mat-cell *matCellDef="let operator">
+                <div class="score-container">
+                  <span class="score">{{ operator.customerSatisfaction }}%</span>
+                  <mat-progress-bar mode="determinate" 
+                    [value]="operator.customerSatisfaction"
+                    [ngClass]="{
+                      'score-high': operator.customerSatisfaction >= 80,
+                      'score-medium': operator.customerSatisfaction >= 60 && operator.customerSatisfaction < 80,
+                      'score-low': operator.customerSatisfaction < 60
+                    }">
+                  </mat-progress-bar>
+                </div>
+              </td>
+            </ng-container>
+            
+            <!-- Response Time Column -->
+            <ng-container matColumnDef="responseTime">
+              <th mat-header-cell *matHeaderCellDef>Yanıt Süresi</th>
+              <td mat-cell *matCellDef="let operator">
+                <mat-icon class="time-icon">schedule</mat-icon>
+                {{ Math.floor(operator.responseTime / 60) }}:{{ (operator.responseTime % 60).toString().padStart(2, '0') }}
+              </td>
+            </ng-container>
+            
+            <!-- Trend Column -->
+            <ng-container matColumnDef="trend">
+              <th mat-header-cell *matHeaderCellDef>Trend</th>
+              <td mat-cell *matCellDef="let operator" [ngClass]="getTrendColor(operator.trend)">
+                <mat-icon>{{ getTrendIcon(operator.trend) }}</mat-icon>
+                {{ operator.trend }}%
+              </td>
+            </ng-container>
+            
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

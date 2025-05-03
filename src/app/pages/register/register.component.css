@@ -253,3 +253,373 @@ a:hover {
   margin: 0 auto;
   padding: 3rem 0;
 }
+
+/* Modern Auth Styling */
+:root {
+  --primary-color: #3498db;
+  --primary-light: #5dade2;
+  --primary-dark: #2980b9;
+  --accent-color: #e74c3c;
+  --text-color: #2c3e50;
+  --text-light: #7f8c8d;
+  --background-light: #ecf0f1;
+  --card-background: #ffffff;
+  --error-color: #e74c3c;
+  --success-color: #2ecc71;
+  --border-radius: 12px;
+  --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 20px;
+}
+
+.auth-card-wrapper {
+  width: 100%;
+  max-width: 900px;
+  perspective: 1000px;
+}
+
+.auth-card {
+  display: flex;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+  min-height: 550px;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.auth-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.auth-banner {
+  flex: 1;
+  background-image: url('https://images.unsplash.com/photo-1587614382346-4ec70e388b28?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  padding: 40px;
+  text-align: center;
+}
+
+.auth-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(41, 128, 185, 0.8) 0%, rgba(52, 152, 219, 0.75) 100%);
+  z-index: 1;
+}
+
+.brand-content {
+  position: relative;
+  z-index: 2;
+}
+
+.logo-circle {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.logo-icon {
+  font-size: 40px;
+  height: 40px;
+  width: 40px;
+  color: white;
+}
+
+.brand-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.brand-subtitle {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.auth-form-container {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-form-header {
+  margin-bottom: 30px;
+}
+
+.auth-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 8px;
+}
+
+.auth-subtitle {
+  color: var(--text-light);
+  font-size: 16px;
+}
+
+.auth-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.input-icon {
+  color: var(--primary-color);
+  margin-right: 8px;
+}
+
+.form-options {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.terms-checkbox {
+  color: #2c3e50 !important;
+  font-weight: 500;
+}
+
+.form-actions {
+  margin-bottom: 20px;
+}
+
+.register-button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  background-color: #3498db !important; /* Material UI buton rengini geçersiz kılmak için !important kullanıyoruz */
+  color: #ffffff !important; /* Buton metninin beyaz olmasını sağlar */
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.register-button:hover {
+  transform: translateY(-2px);
+  background-color: #2980b9 !important; /* Hover durumundaki renk */
+  box-shadow: 0 5px 15px rgba(41, 128, 185, 0.4);
+}
+
+.register-button mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  transition: transform 0.3s ease;
+  color: white !important;
+}
+
+.register-button:hover mat-icon {
+  transform: translateX(3px);
+}
+
+.error-container {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: rgba(231, 76, 60, 0.1);
+  border-left: 4px solid var(--error-color);
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.error-icon {
+  color: var(--error-color);
+  margin-right: 10px;
+}
+
+.error-message {
+  color: var(--error-color);
+  font-size: 14px;
+  margin: 0;
+}
+
+.success-container {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: rgba(46, 204, 113, 0.1);
+  border-left: 4px solid var(--success-color);
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.success-icon {
+  color: var(--success-color);
+  margin-right: 10px;
+}
+
+.success-message {
+  color: var(--success-color);
+  font-size: 14px;
+  margin: 0;
+}
+
+.auth-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.login-text {
+  color: var(--text-light);
+  font-size: 14px;
+  margin: 0;
+}
+
+.login-link {
+  color: #2980b9 !important; /* Daha koyu mavi */
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.2s;
+  background-color: transparent;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.login-link:hover {
+  color: #ffffff !important;
+  background-color: #3498db;
+  text-decoration: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .auth-card {
+    flex-direction: column;
+  }
+
+  .auth-banner {
+    min-height: 150px;
+    padding: 20px;
+  }
+
+  .logo-circle {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+  }
+
+  .logo-icon {
+    font-size: 30px;
+    height: 30px;
+    width: 30px;
+  }
+
+  .brand-title {
+    font-size: 24px;
+  }
+
+  .auth-form-container {
+    padding: 30px;
+  }
+}
+
+/* Custom Material Form Field Styling */
+:host ::ng-deep .mat-mdc-form-field-flex {
+  background-color: #f7f9fc !important;
+  border-radius: 8px !important;
+  padding: 0 15px !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field-infix {
+  padding: 16px 0 !important;
+}
+
+:host ::ng-deep .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  height: 0;
+}
+
+:host ::ng-deep .mat-mdc-floating-label {
+  font-size: 14px !important;
+}
+
+:host ::ng-deep .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__leading {
+  border-radius: 8px 0 0 8px !important;
+  border-color: #dfe6e9 !important;
+}
+
+:host ::ng-deep .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__trailing {
+  border-radius: 0 8px 8px 0 !important;
+  border-color: #dfe6e9 !important;
+}
+
+:host ::ng-deep .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__notch {
+  border-color: #dfe6e9 !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline__leading,
+:host ::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline__trailing,
+:host ::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline__notch {
+  border-color: var(--primary-color) !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing,
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch {
+  border-color: var(--primary-color) !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field-icon-prefix,
+:host ::ng-deep .mat-mdc-form-field-icon-suffix {
+  align-self: center !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-form-field-icon-prefix > .mat-icon {
+  padding-right: 12px;
+}
+
+/* Checkbox styling */
+:host ::ng-deep .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+:host ::ng-deep .mat-mdc-checkbox .mdc-form-field {
+  font-size: 14px;
+}

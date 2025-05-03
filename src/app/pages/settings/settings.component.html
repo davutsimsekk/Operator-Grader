@@ -5,7 +5,157 @@
       <mat-card-title>Ayarlar</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <mat-tab-group animationDuration="0ms">
+      <mat-tab-group animationDuration="0ms" [(selectedIndex)]="selectedTabIndex">
+        <mat-tab label="Profil">
+          <div class="tab-content">
+            <div class="profile-header">
+              <div class="profile-picture-container">
+                <div class="profile-picture" [style.background-image]="'url(' + profilePictureUrl + ')'">
+                  <button mat-mini-fab color="primary" class="change-photo-button" (click)="triggerFileInput()">
+                    <mat-icon>photo_camera</mat-icon>
+                  </button>
+                  <input type="file" #fileInput hidden accept="image/*" (change)="onFileSelected($event)">
+                </div>
+                <h2 class="profile-name">{{fullName}}</h2>
+                <p class="profile-position">{{position}} - {{department}}</p>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <h3>Hesap Bilgileri</h3>
+              <mat-divider></mat-divider>
+              
+              <div class="profile-section">
+                <h4>Kullanıcı Adı Değiştir</h4>
+                <div class="setting-item">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Mevcut Kullanıcı Adı</mat-label>
+                    <input matInput [value]="currentUsername" disabled>
+                    <mat-icon matSuffix>person</mat-icon>
+                  </mat-form-field>
+                </div>
+                <div class="setting-item">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Yeni Kullanıcı Adı</mat-label>
+                    <input matInput [(ngModel)]="newUsername">
+                    <mat-icon matSuffix>edit</mat-icon>
+                  </mat-form-field>
+                </div>
+                <p class="error-message" *ngIf="usernameError">{{usernameError}}</p>
+                <div class="settings-actions">
+                  <button mat-flat-button color="primary" (click)="updateUsername()">
+                    <mat-icon>save</mat-icon>
+                    Kullanıcı Adını Güncelle
+                  </button>
+                </div>
+              </div>
+
+              <div class="profile-section">
+                <h4>Şifre Değiştir</h4>
+                <div class="setting-item">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Mevcut Şifre</mat-label>
+                    <input matInput type="password" [(ngModel)]="currentPassword">
+                    <mat-icon matSuffix>lock</mat-icon>
+                  </mat-form-field>
+                </div>
+                <div class="setting-item">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Yeni Şifre</mat-label>
+                    <input matInput type="password" [(ngModel)]="newPassword">
+                    <mat-icon matSuffix>lock_open</mat-icon>
+                  </mat-form-field>
+                </div>
+                <div class="setting-item">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Şifre Tekrarı</mat-label>
+                    <input matInput type="password" [(ngModel)]="confirmPassword">
+                    <mat-icon matSuffix>done</mat-icon>
+                  </mat-form-field>
+                </div>
+                <p class="error-message" *ngIf="passwordError">{{passwordError}}</p>
+                <div class="settings-actions">
+                  <button mat-flat-button color="primary" (click)="updatePassword()">
+                    <mat-icon>save</mat-icon>
+                    Şifreyi Güncelle
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <h3>Kişisel Bilgiler</h3>
+              <mat-divider></mat-divider>
+              
+              <div class="profile-form">
+                <div class="setting-item">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Ad Soyad</mat-label>
+                    <input matInput [(ngModel)]="fullName">
+                    <mat-icon matSuffix>person</mat-icon>
+                  </mat-form-field>
+                </div>
+                
+                <div class="setting-item">
+                  <mat-form-field appearance="outline">
+                    <mat-label>E-posta</mat-label>
+                    <input matInput [(ngModel)]="email" type="email">
+                    <mat-icon matSuffix>email</mat-icon>
+                  </mat-form-field>
+                </div>
+                
+                <div class="setting-item">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Telefon</mat-label>
+                    <input matInput [(ngModel)]="phone">
+                    <mat-icon matSuffix>phone</mat-icon>
+                  </mat-form-field>
+                </div>
+                
+                <div class="setting-item">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Departman</mat-label>
+                    <mat-select [(ngModel)]="department">
+                      <mat-option value="Çağrı Merkezi">Çağrı Merkezi</mat-option>
+                      <mat-option value="İnsan Kaynakları">İnsan Kaynakları</mat-option>
+                      <mat-option value="Teknik Destek">Teknik Destek</mat-option>
+                      <mat-option value="Yönetim">Yönetim</mat-option>
+                    </mat-select>
+                    <mat-icon matSuffix>business</mat-icon>
+                  </mat-form-field>
+                </div>
+                
+                <div class="setting-item">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Pozisyon</mat-label>
+                    <mat-select [(ngModel)]="position">
+                      <mat-option value="Operatör">Operatör</mat-option>
+                      <mat-option value="Supervisor">Supervisor</mat-option>
+                      <mat-option value="Takım Lideri">Takım Lideri</mat-option>
+                      <mat-option value="Müdür">Müdür</mat-option>
+                    </mat-select>
+                    <mat-icon matSuffix>work</mat-icon>
+                  </mat-form-field>
+                </div>
+                
+                <div class="setting-item">
+                  <mat-form-field appearance="outline" class="bio-field">
+                    <mat-label>Hakkında</mat-label>
+                    <textarea matInput [(ngModel)]="bio" rows="4"></textarea>
+                  </mat-form-field>
+                </div>
+                
+                <div class="settings-actions">
+                  <button mat-flat-button color="primary" (click)="updateProfile()">
+                    <mat-icon>save</mat-icon>
+                    Profili Güncelle
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        
         <mat-tab label="Genel Ayarlar">
           <div class="tab-content">
             <div class="settings-section">

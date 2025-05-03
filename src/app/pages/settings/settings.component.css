@@ -29,6 +29,7 @@ mat-card-content {
 
 .settings-section {
   margin-bottom: 32px;
+  padding: 0 8px;
 }
 
 .settings-section h3 {
@@ -37,7 +38,6 @@ mat-card-content {
   font-weight: 500;
   margin-bottom: 16px;
   padding-bottom: 8px;
-  border-bottom: 1px solid rgba(86, 103, 255, 0.2);
 }
 
 .setting-item {
@@ -57,4 +57,109 @@ mat-card-content {
 
 mat-tab-group {
   height: 100%;
+}
+
+/* Profile Styles */
+.profile-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.profile-picture-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.profile-picture {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #e0e0e0;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 4px solid #fff;
+}
+
+.change-photo-button {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 36px;
+  height: 36px;
+  min-width: unset;
+  padding: 0;
+}
+
+.change-photo-button mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  line-height: 18px;
+}
+
+.profile-name {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: #2c3e50;
+}
+
+.profile-position {
+  font-size: 14px;
+  color: #7f8c8d;
+  margin: 0;
+}
+
+.profile-section {
+  background-color: #f9fafc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.profile-section h4 {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 16px 0;
+  color: #34495e;
+}
+
+.profile-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.bio-field {
+  grid-column: 1 / -1;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 14px;
+  margin: 4px 0;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+  .profile-form {
+    grid-template-columns: 1fr;
+  }
+  
+  .profile-picture {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .settings-section {
+    padding: 0;
+  }
 }

@@ -1,121 +1,222 @@
 <div class="dashboard-container">
   <div class="main-content">
+    <!-- Evaluation List Section -->
     <div class="evaluation-list-container">
       <mat-card class="full-height evaluation-list-card">
         <mat-card-header [class.speech-detail-header]="showSpeechDetail">
-          <button mat-icon-button *ngIf="showSpeechDetail" (click)="goBackToList()" class="back-button">
-            <mat-icon>arrow_back_ios</mat-icon>
-          </button>
-          <mat-icon mat-card-avatar>list_alt</mat-icon>
-          <mat-card-title>{{ showSpeechDetail ? 'Konuşma Detayları' : 'Değerlendirme Listesi' }}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="scrollable-content">
-          <div *ngIf="!showSpeechDetail" class="table-container">
-            <table mat-table [dataSource]="evaluationDataSource" class="compact-table" style="width: 100%;" matSort #evaluationSort="matSort">
-              <!-- Çağrı ID Column -->
-              <ng-container matColumnDef="cagriId">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Çağrı ID </th>
-                <td mat-cell *matCellDef="let element"> {{element.cagriId}} </td>
-              </ng-container>
-
-              <!-- Değerlendirme Durumu Column -->
-              <ng-container matColumnDef="degerlendirmeDurumu">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Değerlendirme Durumu </th>
-                <td mat-cell *matCellDef="let element"> {{element.degerlendirmeDurumu}} </td>
-              </ng-container>
-
-              <!-- Asistan Sicil Column -->
-              <ng-container matColumnDef="asistanSicil">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Asistan Sicil </th>
-                <td mat-cell *matCellDef="let element"> {{element.asistanSicil}} </td>
-              </ng-container>
-
-              <!-- Asistanın Adı Soyadı Column -->
-              <ng-container matColumnDef="asistanAdiSoyadi">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Asistanın Adı Soyadı </th>
-                <td mat-cell *matCellDef="let element"> {{element.asistanAdiSoyadi}} </td>
-              </ng-container>
-
-              <!-- Çağrı Tarihi Column -->
-              <ng-container matColumnDef="cagriTarihi">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Çağrı Tarihi </th>
-                <td mat-cell *matCellDef="let element"> {{element.cagriTarihi | date:'short'}} </td>
-              </ng-container>
-
-              <!-- Çağrı Süresi Column -->
-              <ng-container matColumnDef="cagriSuresi">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Çağrı Süresi </th>
-                <td mat-cell *matCellDef="let element"> {{element.cagriSuresi}} </td>
-              </ng-container>
-
-              <!-- Değerlendirenin Adı Column -->
-              <ng-container matColumnDef="degerlendireninAdi">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Değerlendirenin Adı </th>
-                <td mat-cell *matCellDef="let element"> {{element.degerlendireninAdi}} </td>
-              </ng-container>
-
-              <!-- Değerlendirme No Column -->
-              <ng-container matColumnDef="degerlendirmeNo">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Değerlendirme No </th>
-                <td mat-cell *matCellDef="let element"> {{element.degerlendirmeNo}} </td>
-              </ng-container>
-
-              <!-- Değerlendirme Puanı Column -->
-              <ng-container matColumnDef="degerlendirmePuani">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Değerlendirme Puanı </th>
-                <td mat-cell *matCellDef="let element"> {{element.degerlendirmePuani}} </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="evaluationDisplayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: evaluationDisplayedColumns;" (click)="onEvaluationRowClick(row)"></tr>
-            </table>
-          </div>
-
-          <div *ngIf="showSpeechDetail && selectedEvaluation" class="speech-details-view">
-            <h3>Konuşma Detayları</h3>
-            <div class="detail-columns">
-              <!-- Left Column -->
-              <div class="detail-column">
-                <div class="detail-item">
-                  <mat-icon>badge</mat-icon>
-                  <p><strong>Çağrı ID:</strong> {{selectedEvaluation.cagriId}}</p>
-                </div>
-                <div class="detail-item">
-                  <mat-icon>check_circle_outline</mat-icon>
-                  <p><strong>Değerlendirme Durumu:</strong> {{selectedEvaluation.degerlendirmeDurumu}}</p>
-                </div>
-                <div class="detail-item">
-                  <mat-icon>person_outline</mat-icon>
-                  <p><strong>Asistan Sicil:</strong> {{selectedEvaluation.asistanSicil}}</p>
-                </div>
-                <div class="detail-item">
-                  <mat-icon>person</mat-icon>
-                  <p><strong>Asistanın Adı Soyadı:</strong> {{selectedEvaluation.asistanAdiSoyadi}}</p>
-                </div>
-                <div class="detail-item">
-                  <mat-icon>star_rate</mat-icon>
-                  <p><strong>Değerlendirme Puanı:</strong> {{selectedEvaluation.degerlendirmePuani}}</p>
-                </div>
+          <div class="header-content">
+            <div class="header-left">
+              <!-- Geri butonu için düzgün hizalamayı sağlayacak bir container div ekledik -->
+              <div class="back-button-container" *ngIf="showSpeechDetail">
+                <button mat-icon-button (click)="goBackToList()" class="back-button">
+                  <mat-icon>arrow_back_ios</mat-icon>
+                </button>
+              </div>
+              <mat-icon mat-card-avatar>list_alt</mat-icon>
+              <mat-card-title>Değerlendirme Listesi</mat-card-title>
+            </div>
+            
+            <div class="header-right">
+              <!-- Arama kutusu ve ikonu -->
+              <button mat-icon-button class="search-toggle-btn" (click)="toggleSearch()" [matTooltip]="searchVisible ? 'Arama kutusunu kapat' : 'Arama yap'">
+                <mat-icon>{{ searchVisible ? 'close' : 'search' }}</mat-icon>
+              </button>
+              
+              <div class="search-box" *ngIf="searchVisible" [@searchAnimation]>
+                <mat-form-field appearance="outline" class="search-field">
+                  <input matInput [(ngModel)]="searchQuery" (ngModelChange)="applySearch()" placeholder="Herhangi bir bilgi ara...">
+                  <button *ngIf="searchQuery" matSuffix mat-icon-button aria-label="Temizle" (click)="clearSearch()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
               </div>
               
-              <!-- Right Column -->
-              <div class="detail-column">
-                <div class="detail-item">
-                  <mat-icon>calendar_today</mat-icon>
-                  <p><strong>Çağrı Tarihi:</strong> {{selectedEvaluation.cagriTarihi | date:'short'}}</p>
+              <button mat-icon-button *ngIf="!showSpeechDetail" class="filter-toggle-btn" (click)="toggleFilters()" 
+                     matTooltip="Filtreleri {{ showFilters ? 'Gizle' : 'Göster' }}">
+                <mat-icon>{{ showFilters ? 'tune_off' : 'tune' }}</mat-icon>
+                <span class="filters-badge" *ngIf="(filterValues.asistanAdiSoyadi || filterValues.asistanSicil || 
+                                              filterValues.cagriId || filterValues.degerlendireninAdi || 
+                                              filterValues.degerlendirmeDurumu || filterValues.puanMin || 
+                                              filterValues.puanMax || filterValues.tarihMin || filterValues.tarihMax)">
+                  •
+                </span>
+              </button>
+            </div>
+          </div>
+        </mat-card-header>
+        <div class="filter-bar" *ngIf="!showSpeechDetail && showFilters" [@filterAnimation]>
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Operatör</mat-label>
+            <input matInput [(ngModel)]="filterValues.asistanAdiSoyadi" (ngModelChange)="applyFilters()">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Sicil No</mat-label>
+            <input matInput [(ngModel)]="filterValues.asistanSicil" (ngModelChange)="applyFilters()">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Çağrı ID</mat-label>
+            <input matInput [(ngModel)]="filterValues.cagriId" (ngModelChange)="applyFilters()">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Değerlendiren</mat-label>
+            <input matInput [(ngModel)]="filterValues.degerlendireninAdi" (ngModelChange)="applyFilters()">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Durum</mat-label>
+            <input matInput [(ngModel)]="filterValues.degerlendirmeDurumu" (ngModelChange)="applyFilters()">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="filter-field short">
+            <mat-label>Puan min</mat-label>
+            <input matInput type="number" [(ngModel)]="filterValues.puanMin" (ngModelChange)="applyFilters()">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="filter-field short">
+            <mat-label>Puan max</mat-label>
+            <input matInput type="number" [(ngModel)]="filterValues.puanMax" (ngModelChange)="applyFilters()">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="filter-field long">
+            <mat-label>Tarih (min)</mat-label>
+            <input matInput [matDatepicker]="pickerMin" [(ngModel)]="filterValues.tarihMin" (dateChange)="applyFilters()">
+            <mat-datepicker-toggle matSuffix [for]="pickerMin"></mat-datepicker-toggle>
+            <mat-datepicker #pickerMin></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="filter-field long">
+            <mat-label>Tarih (max)</mat-label>
+            <input matInput [matDatepicker]="pickerMax" [(ngModel)]="filterValues.tarihMax" (dateChange)="applyFilters()">
+            <mat-datepicker-toggle matSuffix [for]="pickerMax"></mat-datepicker-toggle>
+            <mat-datepicker #pickerMax></mat-datepicker>
+          </mat-form-field>
+          <button mat-stroked-button color="primary" class="clear-filters" (click)="clearFilters()">Temizle</button>
+        </div>
+        
+        <mat-card-content class="scrollable-content">
+          <!-- Speech Details View -->
+          <div *ngIf="showSpeechDetail" class="speech-details-view">
+            <h3>Konuşma Bilgileri</h3>
+            <div class="detail-items">
+              <div class="detail-item">
+                <mat-icon>person</mat-icon>
+                <p><strong>Operatör:</strong> {{selectedEvaluation?.asistanAdiSoyadi}}</p>
+              </div>
+              <div class="detail-item">
+                <mat-icon>phone</mat-icon>
+                <p><strong>Çağrı ID:</strong> {{selectedEvaluation?.cagriId}}</p>
+              </div>
+              <div class="detail-item">
+                <mat-icon>badge</mat-icon>
+                <p><strong>Sicil No:</strong> {{selectedEvaluation?.asistanSicil}}</p>
+              </div>
+              <div class="detail-item">
+                <mat-icon>assignment_ind</mat-icon>
+                <p><strong>Değerlendiren Kişi:</strong> {{selectedEvaluation?.degerlendireninAdi}}</p>
+              </div>
+              <div class="detail-item">
+                <mat-icon>schedule</mat-icon>
+                <p><strong>Tarih:</strong> {{selectedEvaluation?.cagriTarihi | date:'medium'}}</p>
+              </div>
+              <div class="detail-item">
+                <mat-icon>timer</mat-icon>
+                <p><strong>Süre:</strong> {{selectedEvaluation?.cagriSuresi}}</p>
+              </div>
+              <div class="detail-item">
+                <mat-icon>grade</mat-icon>
+                <p><strong>Puan:</strong> {{selectedEvaluation?.degerlendirmePuani}}</p>
+              </div>
+              <div class="detail-item">
+                <mat-icon>assignment</mat-icon>
+                <p><strong>Değerlendirme No:</strong> {{selectedEvaluation?.degerlendirmeNo}}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Evaluation List View -->
+          <div *ngIf="!showSpeechDetail" class="table-container">
+            <table mat-table [dataSource]="getMainTableData()" matSort class="compact-table" [class.page-transition-animation]="isPageTransitioning">
+              <!-- Çağrı ID -->
+              <ng-container matColumnDef="cagriId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Çağrı ID</th>
+                <td mat-cell *matCellDef="let row">{{row.cagriId}}</td>
+              </ng-container>
+
+              <!-- Değerlendirme Durumu -->
+              <ng-container matColumnDef="degerlendirmeDurumu">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Durum</th>
+                <td mat-cell *matCellDef="let row">{{row.degerlendirmeDurumu}}</td>
+              </ng-container>
+
+              <!-- Asistan Sicil -->
+              <ng-container matColumnDef="asistanSicil">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Sicil</th>
+                <td mat-cell *matCellDef="let row">{{row.asistanSicil}}</td>
+              </ng-container>
+
+              <!-- Asistan Adı Soyadı -->
+              <ng-container matColumnDef="asistanAdiSoyadi">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Asistan</th>
+                <td mat-cell *matCellDef="let row">{{row.asistanAdiSoyadi}}</td>
+              </ng-container>
+
+              <!-- Çağrı Tarihi -->
+              <ng-container matColumnDef="cagriTarihi">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Tarih</th>
+                <td mat-cell *matCellDef="let row">{{row.cagriTarihi | date:'dd.MM.yyyy HH:mm'}}</td>
+              </ng-container>
+
+              <!-- Çağrı Süresi -->
+              <ng-container matColumnDef="cagriSuresi">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Süre</th>
+                <td mat-cell *matCellDef="let row">{{row.cagriSuresi}}</td>
+              </ng-container>
+
+              <!-- Değerlendirenin Adı -->
+              <ng-container matColumnDef="degerlendireninAdi">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Değerlendiren</th>
+                <td mat-cell *matCellDef="let row">{{row.degerlendireninAdi}}</td>
+              </ng-container>
+
+              <!-- Değerlendirme No -->
+              <ng-container matColumnDef="degerlendirmeNo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Değerlendirme No</th>
+                <td mat-cell *matCellDef="let row">{{row.degerlendirmeNo}}</td>
+              </ng-container>
+
+              <!-- Değerlendirme Puanı -->
+              <ng-container matColumnDef="degerlendirmePuani">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Puan</th>
+                <td mat-cell *matCellDef="let row">
+                  <span class="point-badge" [ngClass]="{
+                    'high-points': row.degerlendirmePuani >= 80,
+                    'medium-points': row.degerlendirmePuani >= 60 && row.degerlendirmePuani < 80,
+                    'low-points': row.degerlendirmePuani < 60
+                  }">
+                    {{row.degerlendirmePuani}}
+                  </span>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="evaluationDisplayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: evaluationDisplayedColumns;" (click)="onEvaluationRowClick(row)"></tr>
+            </table>
+            
+            <div class="pagination-container">
+              <div class="pagination-wrapper">
+                <button mat-icon-button class="pagination-nav-btn" [disabled]="currentMainPage === 0" (click)="goToPage(currentMainPage - 1)">
+                  <mat-icon>chevron_left</mat-icon>
+                </button>
+                
+                <!-- Page selector dropdown -->
+                <div class="page-selector">
+                  <mat-form-field appearance="outline" class="page-selector-field">
+                    <mat-select [value]="currentMainPage" (selectionChange)="goToPage($event.value)">
+                      <mat-option *ngFor="let page of getPageNumbersDropdown()" [value]="page">
+                        {{page + 1}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
                 </div>
-                <div class="detail-item">
-                  <mat-icon>timer</mat-icon>
-                  <p><strong>Çağrı Süresi:</strong> {{selectedEvaluation.cagriSuresi}}</p>
-                </div>
-                <div class="detail-item">
-                  <mat-icon>assignment_ind</mat-icon>
-                  <p><strong>Değerlendirenin Adı:</strong> {{selectedEvaluation.degerlendireninAdi}}</p>
-                </div>
-                <div class="detail-item">
-                  <mat-icon>format_list_numbered</mat-icon>
-                  <p><strong>Değerlendirme No:</strong> {{selectedEvaluation.degerlendirmeNo}}</p>
-                </div>
+                
+                <button mat-icon-button class="pagination-nav-btn" [disabled]="currentMainPage >= getLastPage()" (click)="goToPage(currentMainPage + 1)">
+                  <mat-icon>chevron_right</mat-icon>
+                </button>
               </div>
             </div>
           </div>
@@ -123,176 +224,178 @@
       </mat-card>
     </div>
 
+    <!-- Tables Section -->
     <div class="tables-container">
       <mat-accordion>
-        <mat-expansion-panel>
+        <!-- Daily Rankings -->
+        <mat-expansion-panel [expanded]="dailyPanelExpanded" (opened)="onDailyPanelChange($event)" (closed)="onDailyPanelChange($event)">
           <mat-expansion-panel-header>
             <mat-panel-title>
+              <mat-icon>today</mat-icon>
               Günlük Sıralama
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <mat-card class="full-height">
-            <mat-card-content class="scrollable-content">
-              <div class="table-container">
-                <table mat-table [dataSource]="getDailyPaginatedData()" class="compact-table" style="width: 100%;">
-                  <ng-container matColumnDef="ID">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-ID">ID</th>
-                    <td mat-cell *matCellDef="let speech">{{speech.ID}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="Operator">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-Operator">Operatör</th>
-                    <td mat-cell *matCellDef="let speech">{{speech.Operator}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="Musteri">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-Musteri">Müşteri</th>
-                    <td mat-cell *matCellDef="let speech">{{speech.Musteri}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="Date">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-Date">Tarih</th>
-                    <td mat-cell *matCellDef="let speech">{{speech.Date | date:'dd'}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="Time">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-Time">Saat</th>
-                    <td mat-cell *matCellDef="let speech">{{speech.Date | date:'shortTime'}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="Puan">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-Puan">Puan</th>
-                    <td mat-cell *matCellDef="let speech">
-                      <span class="point-badge" [ngClass]="{'high-points': speech.Puan > 80, 'medium-points': speech.Puan >= 60 && speech.Puan <= 80, 'low-points': speech.Puan < 60}">
-                        {{speech.Puan}}
-                    </span>
-                  </td>
-                </ng-container>
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClick(row)" [class.selected]="selectedSpeech === row"></tr>
-                </table>
-                <mat-paginator
-                  [length]="dailySpeeches.length"
-                  [pageSize]="dailyPageSize"
-                  [pageIndex]="dailyPageIndex"
-                  [pageSizeOptions]="[5]"
-                  [hidePageSize]="true"
-                  (page)="onDailyPageChange($event)"
-                  class="dashboard-paginator">
-                </mat-paginator>
-              </div>
-            </mat-card-content>
-          </mat-card>
+          <div class="table-container">
+            <table mat-table [dataSource]="getDailyPaginatedData()" class="compact-table">
+              <ng-container matColumnDef="cagriId">
+                <th mat-header-cell *matHeaderCellDef>Çağrı ID</th>
+                <td mat-cell *matCellDef="let speech">{{speech.cagriId}}</td>
+              </ng-container>
+              <ng-container matColumnDef="asistanAdiSoyadi">
+                <th mat-header-cell *matHeaderCellDef>Operatör</th>
+                <td mat-cell *matCellDef="let speech">{{speech.asistanAdiSoyadi}}</td>
+              </ng-container>
+              <ng-container matColumnDef="cagriTarihi">
+                <th mat-header-cell *matHeaderCellDef>Tarih</th>
+                <td mat-cell *matCellDef="let speech">{{speech.cagriTarihi | date:'dd/MM'}}</td>
+              </ng-container>
+              <ng-container matColumnDef="cagriSuresi">
+                <th mat-header-cell *matHeaderCellDef>Süre</th>
+                <td mat-cell *matCellDef="let speech">{{speech.cagriSuresi}}</td>
+              </ng-container>
+              <ng-container matColumnDef="degerlendirmePuani">
+                <th mat-header-cell *matHeaderCellDef>Puan</th>
+                <td mat-cell *matCellDef="let speech">
+                  <span class="point-badge" [ngClass]="{
+                    'high-points': speech.degerlendirmePuani >= 80,
+                    'medium-points': speech.degerlendirmePuani >= 60 && speech.degerlendirmePuani < 80,
+                    'low-points': speech.degerlendirmePuani < 60
+                  }">
+                    {{speech.degerlendirmePuani}}
+                  </span>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+                  (click)="onRowClick(row)" 
+                  [class.selected]="selectedSpeech === row">
+              </tr>
+            </table>
+            <mat-paginator 
+              [length]="dailySpeeches.length"
+              [pageSize]="RANKING_TABLE_ITEMS"
+              [pageIndex]="currentRankingPage"
+              [pageSizeOptions]="[]"
+              (page)="onRankingPageChange($event)"
+              class="dashboard-paginator">
+            </mat-paginator>
+          </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel>
+        <!-- Weekly Rankings -->
+        <mat-expansion-panel [expanded]="weeklyPanelExpanded" (opened)="onWeeklyPanelChange($event)" (closed)="onWeeklyPanelChange($event)">
           <mat-expansion-panel-header>
             <mat-panel-title>
+              <mat-icon>date_range</mat-icon>
               Haftalık Sıralama
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <mat-card class="full-height">
-            <mat-card-content class="scrollable-content">
-              <div class="table-container">
-                <table mat-table [dataSource]="getWeeklyPaginatedData()" class="compact-table" style="width: 100%;">
-                  <ng-container matColumnDef="ID">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-ID">ID</th>
-                    <td mat-cell *matCellDef="let speech">{{speech.ID}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="Operator">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-Operator">Operatör</th>
-                    <td mat-cell *matCellDef="let speech">{{speech.Operator}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="Musteri">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-Musteri">Müşteri</th>
-                    <td mat-cell *matCellDef="let speech">{{speech.Musteri}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="Date">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-Date">Tarih</th>
-                    <td mat-cell *matCellDef="let speech">{{speech.Date | date:'dd'}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="Time">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-Time">Saat</th>
-                    <td mat-cell *matCellDef="let speech">{{speech.Date | date:'shortTime'}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="Puan">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-Puan">Puan</th>
-                    <td mat-cell *matCellDef="let speech">
-                      <span class="point-badge" [ngClass]="{'high-points': speech.Puan > 80, 'medium-points': speech.Puan >= 60 && speech.Puan <= 80, 'low-points': speech.Puan < 60}">
-                        {{speech.Puan}}
-                    </span>
-                  </td>
-                </ng-container>
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClick(row)" [class.selected]="selectedSpeech === row"></tr>
-                </table>
-                <mat-paginator
-                  [length]="weeklySpeeches.length"
-                  [pageSize]="weeklyPageSize"
-                  [pageIndex]="weeklyPageIndex"
-                  [pageSizeOptions]="[5]"
-                  [hidePageSize]="true"
-                  (page)="onWeeklyPageChange($event)"
-                  class="dashboard-paginator">
-                </mat-paginator>
-              </div>
-            </mat-card-content>
-          </mat-card>
+          <div class="table-container">
+            <table mat-table [dataSource]="getWeeklyPaginatedData()" class="compact-table">
+              <ng-container matColumnDef="cagriId">
+                <th mat-header-cell *matHeaderCellDef>Çağrı ID</th>
+                <td mat-cell *matCellDef="let speech">{{speech.cagriId}}</td>
+              </ng-container>
+              <ng-container matColumnDef="asistanAdiSoyadi">
+                <th mat-header-cell *matHeaderCellDef>Operatör</th>
+                <td mat-cell *matCellDef="let speech">{{speech.asistanAdiSoyadi}}</td>
+              </ng-container>
+              <ng-container matColumnDef="cagriTarihi">
+                <th mat-header-cell *matHeaderCellDef>Tarih</th>
+                <td mat-cell *matCellDef="let speech">{{speech.cagriTarihi | date:'dd/MM'}}</td>
+              </ng-container>
+              <ng-container matColumnDef="cagriSuresi">
+                <th mat-header-cell *matHeaderCellDef>Süre</th>
+                <td mat-cell *matCellDef="let speech">{{speech.cagriSuresi}}</td>
+              </ng-container>
+              <ng-container matColumnDef="degerlendirmePuani">
+                <th mat-header-cell *matHeaderCellDef>Puan</th>
+                <td mat-cell *matCellDef="let speech">
+                  <span class="point-badge" [ngClass]="{
+                    'high-points': speech.degerlendirmePuani > 80,
+                    'medium-points': speech.degerlendirmePuani >= 60 && speech.degerlendirmePuani <= 80,
+                    'low-points': speech.degerlendirmePuani < 60
+                  }">
+                    {{speech.degerlendirmePuani}}
+                  </span>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+                  (click)="onRowClick(row)" 
+                  [class.selected]="selectedSpeech === row">
+              </tr>
+            </table>
+            <mat-paginator 
+              [length]="weeklySpeeches.length"
+              [pageSize]="RANKING_TABLE_ITEMS"
+              [pageIndex]="currentRankingPage"
+              [pageSizeOptions]="[]"
+              (page)="onRankingPageChange($event)"
+              class="dashboard-paginator">
+            </mat-paginator>
+          </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel>
+        <!-- Monthly Rankings -->
+        <mat-expansion-panel [expanded]="monthlyPanelExpanded" (opened)="onMonthlyPanelChange($event)" (closed)="onMonthlyPanelChange($event)">
           <mat-expansion-panel-header>
             <mat-panel-title>
+              <mat-icon>calendar_month</mat-icon>
               Aylık Sıralama
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <mat-card class="full-height">
-            <mat-card-content class="scrollable-content">
-              <div class="table-container">
-                <table mat-table [dataSource]="getMonthlyPaginatedData()" class="compact-table" style="width: 100%;">
-                  <ng-container matColumnDef="ID">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-ID">ID</th>
-                    <td mat-cell *matCellDef="let speech">{{speech.ID}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="Operator">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-Operator">Operatör</th>
-                    <td mat-cell *matCellDef="let speech">{{speech.Operator}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="Musteri">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-Musteri">Müşteri</th>
-                    <td mat-cell *matCellDef="let speech">{{speech.Musteri}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="Date">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-Date">Tarih</th>
-                    <td mat-cell *matCellDef="let speech">{{speech.Date | date:'dd'}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="Time">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-Time">Saat</th>
-                    <td mat-cell *matCellDef="let speech">{{speech.Date | date:'shortTime'}}</td>
-                  </ng-container>
-                  <ng-container matColumnDef="Puan">
-                    <th mat-header-cell *matHeaderCellDef class="mat-column-Puan">Puan</th>
-                    <td mat-cell *matCellDef="let speech">
-                      <span class="point-badge" [ngClass]="{'high-points': speech.Puan > 80, 'medium-points': speech.Puan >= 60 && speech.Puan <= 80, 'low-points': speech.Puan < 60}">
-                        {{speech.Puan}}
-                    </span>
-                  </td>
-                </ng-container>
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClick(row)" [class.selected]="selectedSpeech === row"></tr>
-                </table>
-                <mat-paginator
-                  [length]="monthlySpeeches.length"
-                  [pageSize]="monthlyPageSize"
-                  [pageIndex]="monthlyPageIndex"
-                  [pageSizeOptions]="[5]"
-                  [hidePageSize]="true"
-                  (page)="onMonthlyPageChange($event)"
-                  class="dashboard-paginator">
-                </mat-paginator>
-              </div>
-            </mat-card-content>
-          </mat-card>
+          <div class="table-container">
+            <table mat-table [dataSource]="getMonthlyPaginatedData()" class="compact-table">
+              <ng-container matColumnDef="cagriId">
+                <th mat-header-cell *matHeaderCellDef>Çağrı ID</th>
+                <td mat-cell *matCellDef="let speech">{{speech.cagriId}}</td>
+              </ng-container>
+              <ng-container matColumnDef="asistanAdiSoyadi">
+                <th mat-header-cell *matHeaderCellDef>Operatör</th>
+                <td mat-cell *matCellDef="let speech">{{speech.asistanAdiSoyadi}}</td>
+              </ng-container>
+              <ng-container matColumnDef="cagriTarihi">
+                <th mat-header-cell *matHeaderCellDef>Tarih</th>
+                <td mat-cell *matCellDef="let speech">{{speech.cagriTarihi | date:'dd/MM'}}</td>
+              </ng-container>
+              <ng-container matColumnDef="cagriSuresi">
+                <th mat-header-cell *matHeaderCellDef>Süre</th>
+                <td mat-cell *matCellDef="let speech">{{speech.cagriSuresi}}</td>
+              </ng-container>
+              <ng-container matColumnDef="degerlendirmePuani">
+                <th mat-header-cell *matHeaderCellDef>Puan</th>
+                <td mat-cell *matCellDef="let speech">
+                  <span class="point-badge" [ngClass]="{
+                    'high-points': speech.degerlendirmePuani > 80,
+                    'medium-points': speech.degerlendirmePuani >= 60 && speech.degerlendirmePuani <= 80,
+                    'low-points': speech.degerlendirmePuani < 60
+                  }">
+                    {{speech.degerlendirmePuani}}
+                  </span>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+                  (click)="onRowClick(row)" 
+                  [class.selected]="selectedSpeech === row">
+              </tr>
+            </table>
+            <mat-paginator 
+              [length]="monthlySpeeches.length"
+              [pageSize]="RANKING_TABLE_ITEMS"
+              [pageIndex]="currentRankingPage"
+              [pageSizeOptions]="[]"
+              (page)="onRankingPageChange($event)"
+              class="dashboard-paginator">
+            </mat-paginator>
+          </div>
         </mat-expansion-panel>
       </mat-accordion>
     </div>
   </div>
 
+  <!-- Sound Graph Card -->
   <mat-card class="sound-graph-card">
     <mat-card-header>
       <mat-icon mat-card-avatar>equalizer</mat-icon>

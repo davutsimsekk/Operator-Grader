@@ -8,58 +8,19 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSortModule, MatSort } from '@angular/material/sort';
-import { SpeechService, Speech } from '../../services/speech.service';
-
-export interface EvaluationData {
-  cagriId: string;
-  degerlendirmeDurumu: string;
-  asistanSicil: string;
-  asistanAdiSoyadi: string;
-  cagriTarihi: Date;
-  cagriSuresi: string; // Added Çağrı Süresi
-  degerlendireninAdi: string;
-  degerlendirmeNo: string;
-  degerlendirmePuani: number;
-}
-
-const ELEMENT_DATA: EvaluationData[] = [
-  {cagriId: '1001', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS123', asistanAdiSoyadi: 'Ahmet Yılmaz', cagriTarihi: new Date('2023-10-26T10:00:00Z'), cagriSuresi: '05:30', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN001', degerlendirmePuani: 85},
-  {cagriId: '1002', degerlendirmeDurumu: 'Beklemede', asistanSicil: 'AS124', asistanAdiSoyadi: 'Fatma Demir', cagriTarihi: new Date('2023-10-26T10:15:00Z'), cagriSuresi: '03:45', degerlendireninAdi: 'Mehmet Can', degerlendirmeNo: 'DN002', degerlendirmePuani: 70},
-  {cagriId: '1003', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS125', asistanAdiSoyadi: 'Ali Veli', cagriTarihi: new Date('2023-10-26T10:30:00Z'), cagriSuresi: '07:10', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN003', degerlendirmePuani: 92},
-  {cagriId: '1004', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS126', asistanAdiSoyadi: 'Canan Er', cagriTarihi: new Date('2023-10-26T10:45:00Z'), cagriSuresi: '04:20', degerlendireninAdi: 'Mehmet Can', degerlendirmeNo: 'DN004', degerlendirmePuani: 78},
-  {cagriId: '1005', degerlendirmeDurumu: 'Beklemede', asistanSicil: 'AS127', asistanAdiSoyadi: 'Deniz Ak', cagriTarihi: new Date('2023-10-26T11:00:00Z'), cagriSuresi: '06:00', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN005', degerlendirmePuani: 65},
-  {cagriId: '1001', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS123', asistanAdiSoyadi: 'Ahmet Yılmaz', cagriTarihi: new Date('2023-10-26T10:00:00Z'), cagriSuresi: '05:30', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN001', degerlendirmePuani: 85},
-  {cagriId: '1002', degerlendirmeDurumu: 'Beklemede', asistanSicil: 'AS124', asistanAdiSoyadi: 'Fatma Demir', cagriTarihi: new Date('2023-10-26T10:15:00Z'), cagriSuresi: '03:45', degerlendireninAdi: 'Mehmet Can', degerlendirmeNo: 'DN002', degerlendirmePuani: 70},
-  {cagriId: '1003', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS125', asistanAdiSoyadi: 'Ali Veli', cagriTarihi: new Date('2023-10-26T10:30:00Z'), cagriSuresi: '07:10', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN003', degerlendirmePuani: 92},
-  {cagriId: '1004', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS126', asistanAdiSoyadi: 'Canan Er', cagriTarihi: new Date('2023-10-26T10:45:00Z'), cagriSuresi: '04:20', degerlendireninAdi: 'Mehmet Can', degerlendirmeNo: 'DN004', degerlendirmePuani: 78},
-  {cagriId: '1005', degerlendirmeDurumu: 'Beklemede', asistanSicil: 'AS127', asistanAdiSoyadi: 'Deniz Ak', cagriTarihi: new Date('2023-10-26T11:00:00Z'), cagriSuresi: '06:00', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN005', degerlendirmePuani: 65},
-  {cagriId: '1001', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS123', asistanAdiSoyadi: 'Ahmet Yılmaz', cagriTarihi: new Date('2023-10-26T10:00:00Z'), cagriSuresi: '05:30', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN001', degerlendirmePuani: 85},
-  {cagriId: '1002', degerlendirmeDurumu: 'Beklemede', asistanSicil: 'AS124', asistanAdiSoyadi: 'Fatma Demir', cagriTarihi: new Date('2023-10-26T10:15:00Z'), cagriSuresi: '03:45', degerlendireninAdi: 'Mehmet Can', degerlendirmeNo: 'DN002', degerlendirmePuani: 70},
-  {cagriId: '1003', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS125', asistanAdiSoyadi: 'Ali Veli', cagriTarihi: new Date('2023-10-26T10:30:00Z'), cagriSuresi: '07:10', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN003', degerlendirmePuani: 92},
-  {cagriId: '1004', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS126', asistanAdiSoyadi: 'Canan Er', cagriTarihi: new Date('2023-10-26T10:45:00Z'), cagriSuresi: '04:20', degerlendireninAdi: 'Mehmet Can', degerlendirmeNo: 'DN004', degerlendirmePuani: 78},
-  {cagriId: '1005', degerlendirmeDurumu: 'Beklemede', asistanSicil: 'AS127', asistanAdiSoyadi: 'Deniz Ak', cagriTarihi: new Date('2023-10-26T11:00:00Z'), cagriSuresi: '06:00', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN005', degerlendirmePuani: 65},
-  {cagriId: '1001', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS123', asistanAdiSoyadi: 'Ahmet Yılmaz', cagriTarihi: new Date('2023-10-26T10:00:00Z'), cagriSuresi: '05:30', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN001', degerlendirmePuani: 85},
-  {cagriId: '1002', degerlendirmeDurumu: 'Beklemede', asistanSicil: 'AS124', asistanAdiSoyadi: 'Fatma Demir', cagriTarihi: new Date('2023-10-26T10:15:00Z'), cagriSuresi: '03:45', degerlendireninAdi: 'Mehmet Can', degerlendirmeNo: 'DN002', degerlendirmePuani: 70},
-  {cagriId: '1003', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS125', asistanAdiSoyadi: 'Ali Veli', cagriTarihi: new Date('2023-10-26T10:30:00Z'), cagriSuresi: '07:10', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN003', degerlendirmePuani: 92},
-  {cagriId: '1004', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS126', asistanAdiSoyadi: 'Canan Er', cagriTarihi: new Date('2023-10-26T10:45:00Z'), cagriSuresi: '04:20', degerlendireninAdi: 'Mehmet Can', degerlendirmeNo: 'DN004', degerlendirmePuani: 78},
-  {cagriId: '1005', degerlendirmeDurumu: 'Beklemede', asistanSicil: 'AS127', asistanAdiSoyadi: 'Deniz Ak', cagriTarihi: new Date('2023-10-26T11:00:00Z'), cagriSuresi: '06:00', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN005', degerlendirmePuani: 65},
-  {cagriId: '1001', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS123', asistanAdiSoyadi: 'Ahmet Yılmaz', cagriTarihi: new Date('2023-10-26T10:00:00Z'), cagriSuresi: '05:30', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN001', degerlendirmePuani: 85},
-  {cagriId: '1002', degerlendirmeDurumu: 'Beklemede', asistanSicil: 'AS124', asistanAdiSoyadi: 'Fatma Demir', cagriTarihi: new Date('2023-10-26T10:15:00Z'), cagriSuresi: '03:45', degerlendireninAdi: 'Mehmet Can', degerlendirmeNo: 'DN002', degerlendirmePuani: 70},
-  {cagriId: '1003', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS125', asistanAdiSoyadi: 'Ali Veli', cagriTarihi: new Date('2023-10-26T10:30:00Z'), cagriSuresi: '07:10', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN003', degerlendirmePuani: 92},
-  {cagriId: '1004', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS126', asistanAdiSoyadi: 'Canan Er', cagriTarihi: new Date('2023-10-26T10:45:00Z'), cagriSuresi: '04:20', degerlendireninAdi: 'Mehmet Can', degerlendirmeNo: 'DN004', degerlendirmePuani: 78},
-  {cagriId: '1005', degerlendirmeDurumu: 'Beklemede', asistanSicil: 'AS127', asistanAdiSoyadi: 'Deniz Ak', cagriTarihi: new Date('2023-10-26T11:00:00Z'), cagriSuresi: '06:00', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN005', degerlendirmePuani: 65},
-  {cagriId: '1001', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS123', asistanAdiSoyadi: 'Ahmet Yılmaz', cagriTarihi: new Date('2023-10-26T10:00:00Z'), cagriSuresi: '05:30', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN001', degerlendirmePuani: 85},
-  {cagriId: '1002', degerlendirmeDurumu: 'Beklemede', asistanSicil: 'AS124', asistanAdiSoyadi: 'Fatma Demir', cagriTarihi: new Date('2023-10-26T10:15:00Z'), cagriSuresi: '03:45', degerlendireninAdi: 'Mehmet Can', degerlendirmeNo: 'DN002', degerlendirmePuani: 70},
-  {cagriId: '1003', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS125', asistanAdiSoyadi: 'Ali Veli', cagriTarihi: new Date('2023-10-26T10:30:00Z'), cagriSuresi: '07:10', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN003', degerlendirmePuani: 92},
-  {cagriId: '1004', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS126', asistanAdiSoyadi: 'Canan Er', cagriTarihi: new Date('2023-10-26T10:45:00Z'), cagriSuresi: '04:20', degerlendireninAdi: 'Mehmet Can', degerlendirmeNo: 'DN004', degerlendirmePuani: 78},
-  {cagriId: '1005', degerlendirmeDurumu: 'Beklemede', asistanSicil: 'AS127', asistanAdiSoyadi: 'Deniz Ak', cagriTarihi: new Date('2023-10-26T11:00:00Z'), cagriSuresi: '06:00', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN005', degerlendirmePuani: 65},
-  {cagriId: '1001', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS123', asistanAdiSoyadi: 'Ahmet Yılmaz', cagriTarihi: new Date('2023-10-26T10:00:00Z'), cagriSuresi: '05:30', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN001', degerlendirmePuani: 85},
-  {cagriId: '1002', degerlendirmeDurumu: 'Beklemede', asistanSicil: 'AS124', asistanAdiSoyadi: 'Fatma Demir', cagriTarihi: new Date('2023-10-26T10:15:00Z'), cagriSuresi: '03:45', degerlendireninAdi: 'Mehmet Can', degerlendirmeNo: 'DN002', degerlendirmePuani: 70},
-  {cagriId: '1003', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS125', asistanAdiSoyadi: 'Ali Veli', cagriTarihi: new Date('2023-10-26T10:30:00Z'), cagriSuresi: '07:10', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN003', degerlendirmePuani: 92},
-  {cagriId: '1004', degerlendirmeDurumu: 'Tamamlandı', asistanSicil: 'AS126', asistanAdiSoyadi: 'Canan Er', cagriTarihi: new Date('2023-10-26T10:45:00Z'), cagriSuresi: '04:20', degerlendireninAdi: 'Mehmet Can', degerlendirmeNo: 'DN004', degerlendirmePuani: 78},
-  {cagriId: '1005', degerlendirmeDurumu: 'Beklemede', asistanSicil: 'AS127', asistanAdiSoyadi: 'Deniz Ak', cagriTarihi: new Date('2023-10-26T11:00:00Z'), cagriSuresi: '06:00', degerlendireninAdi: 'Ayşe Kaya', degerlendirmeNo: 'DN005', degerlendirmePuani: 65},
-];
-
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { EvaluationService, EvaluationData } from '../../services/evaluation.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-dashboard',
@@ -73,10 +34,49 @@ const ELEMENT_DATA: EvaluationData[] = [
     MatIconModule,
     MatPaginatorModule,
     MatExpansionModule,
-    MatSortModule
+    MatSortModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    FormsModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule, // Required for date picker
+    MatButtonModule,
+    MatTooltipModule
   ],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrl: './dashboard.component.css',
+  animations: [
+    trigger('filterAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, maxHeight: '0', overflow: 'hidden' }),
+        animate('300ms ease-out', 
+          style({ opacity: 1, maxHeight: '1000px' })
+        )
+      ]),
+      transition(':leave', [
+        style({ opacity: 1, maxHeight: '1000px', overflow: 'hidden' }),
+        animate('200ms ease-in', 
+          style({ opacity: 0, maxHeight: '0' })
+        )
+      ])
+    ]),
+    // Arama kutusu için animasyon eklendi
+    trigger('searchAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, width: '0', overflow: 'hidden' }),
+        animate('200ms ease-out', 
+          style({ opacity: 1, width: '250px' })
+        )
+      ]),
+      transition(':leave', [
+        style({ opacity: 1, width: '250px', overflow: 'hidden' }),
+        animate('150ms ease-in', 
+          style({ opacity: 0, width: '0' })
+        )
+      ])
+    ])
+  ]
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
   speechDuration: number = 0;
@@ -84,29 +84,73 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   averageWordLength: number = 0;
   mostFrequentWords: string = '';
 
-  dailySpeeches: Speech[] = [];
-  weeklySpeeches: Speech[] = [];
-  monthlySpeeches: Speech[] = [];
+  dailySpeeches: EvaluationData[] = [];
+  weeklySpeeches: EvaluationData[] = [];
+  monthlySpeeches: EvaluationData[] = [];
 
-  dailyPageSize = 5;
-  dailyPageIndex = 0;
-  weeklyPageSize = 5;
-  weeklyPageIndex = 0;
-  monthlyPageSize = 5;
-  monthlyPageIndex = 0;
+  // Pagination settings
+  readonly MAIN_TABLE_ITEMS = 10;
+  readonly RANKING_TABLE_ITEMS = 7;
+  currentMainPage = 0;
+  currentRankingPage = 0;
 
-  displayedColumns: string[] = ['ID', 'Operator', 'Musteri', 'Date', 'Time', 'Puan'];
+  displayedColumns: string[] = ['cagriId', 'asistanAdiSoyadi', 'cagriTarihi', 'cagriSuresi', 'degerlendirmePuani'];
 
-  selectedSpeech: Speech | null = null;
-  selectedEvaluation: EvaluationData | null = null; // Added selectedEvaluation
-  showSpeechDetail: boolean = false; // Added showSpeechDetail
+  selectedSpeech: EvaluationData | null = null;
+  selectedEvaluation: EvaluationData | null = null;
+  showSpeechDetail: boolean = false;
+  
+  // Arama kutusu görünürlüğü için yeni değişken
+  searchVisible: boolean = false;
 
-  evaluationDataSource = new MatTableDataSource(ELEMENT_DATA);
-  evaluationDisplayedColumns: string[] = ['cagriId', 'degerlendirmeDurumu', 'asistanSicil', 'asistanAdiSoyadi', 'cagriTarihi', 'cagriSuresi', 'degerlendireninAdi', 'degerlendirmeNo', 'degerlendirmePuani']; // Added cagriSuresi
+  evaluationDataSource = new MatTableDataSource<EvaluationData>();
+  evaluationDisplayedColumns: string[] = [
+    'cagriId',
+    'degerlendirmeDurumu',
+    'asistanSicil',
+    'asistanAdiSoyadi',
+    'cagriTarihi',
+    'cagriSuresi',
+    'degerlendireninAdi',
+    'degerlendirmeNo',
+    'degerlendirmePuani'
+  ];
 
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private speechService: SpeechService) {}
+  // Expansion panel states
+  dailyPanelExpanded = true;
+  weeklyPanelExpanded = false;
+  monthlyPanelExpanded = false;
+
+  filterValues: any = {
+    asistanAdiSoyadi: '',
+    asistanSicil: '',
+    cagriId: '',
+    degerlendireninAdi: '',
+    degerlendirmeDurumu: '',
+    puanMin: null,
+    puanMax: null,
+    tarihMin: null,
+    tarihMax: null
+  };
+  filteredData: EvaluationData[] = [];
+  
+  // Arama özelliği için yeni değişken
+  searchQuery: string = '';
+  allData: EvaluationData[] = []; // Orijinal veri kaynağı
+
+  // Add property to control filter visibility
+  showFilters: boolean = false;
+
+  // Page transition animation flag
+  isPageTransitioning: boolean = false;
+
+  constructor(
+    private evaluationService: EvaluationService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadData();
@@ -114,69 +158,302 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.evaluationDataSource.sort = this.sort;
+    this.evaluationDataSource.paginator = this.paginator;
+    
+    // Configure sorting
+    this.evaluationDataSource.sortingDataAccessor = (item, property) => {
+      switch(property) {
+        case 'cagriTarihi': return new Date(item.cagriTarihi).getTime();
+        case 'degerlendirmePuani': return item.degerlendirmePuani;
+        case 'cagriSuresi': return Number(item.cagriSuresi);
+        default: return String(item[property as keyof EvaluationData]);
+      }
+    };
   }
 
   loadData() {
-    this.speechService.getDailySorted().subscribe(data => {
-      this.dailySpeeches = data;
-    });
+    this.evaluationService.getEvaluations().subscribe(data => {
+      this.evaluationDataSource.data = data;
+      this.filteredData = data;
+      this.allData = data; // Orijinal veriyi sakla
+      this.applyFilters();
+      
+      // Filter and sort data for daily rankings (last 24 hours)
+      const oneDayAgo = new Date();
+      oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+      this.dailySpeeches = data
+        .filter(evaluation => new Date(evaluation.cagriTarihi) >= oneDayAgo)
+        .sort((a, b) => b.degerlendirmePuani - a.degerlendirmePuani);
 
-    this.speechService.getWeeklySorted().subscribe(data => {
-      this.weeklySpeeches = data;
-    });
+      // Filter and sort data for weekly rankings (last 7 days)
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+      this.weeklySpeeches = data
+        .filter(evaluation => new Date(evaluation.cagriTarihi) >= oneWeekAgo)
+        .sort((a, b) => b.degerlendirmePuani - a.degerlendirmePuani);
 
-    this.speechService.getMonthlySorted().subscribe(data => {
-      this.monthlySpeeches = data;
+      // Filter and sort data for monthly rankings (last 30 days)
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
+      this.monthlySpeeches = data
+        .filter(evaluation => new Date(evaluation.cagriTarihi) >= oneMonthAgo)
+        .sort((a, b) => b.degerlendirmePuani - a.degerlendirmePuani);
     });
   }
 
-  onRowClick(speech: Speech) {
+  applyFilters() {
+    console.log('applyFilters called', this.filterValues);
+    let data = this.evaluationDataSource.data;
+    this.filteredData = data.filter(item => {
+      const matchesOperator = !this.filterValues.asistanAdiSoyadi || (item.asistanAdiSoyadi || '').toLowerCase().includes(this.filterValues.asistanAdiSoyadi.toLowerCase());
+      const matchesSicil = !this.filterValues.asistanSicil || (item.asistanSicil || '').toString().includes(this.filterValues.asistanSicil);
+      const matchesCagriId = !this.filterValues.cagriId || (item.cagriId || '').toString().includes(this.filterValues.cagriId);
+      const matchesDegerlendiren = !this.filterValues.degerlendireninAdi || (item.degerlendireninAdi || '').toLowerCase().includes(this.filterValues.degerlendireninAdi.toLowerCase());
+      const matchesDurum = !this.filterValues.degerlendirmeDurumu || (item.degerlendirmeDurumu || '').toLowerCase().includes(this.filterValues.degerlendirmeDurumu.toLowerCase());
+      const matchesPuanMin = this.filterValues.puanMin == null || item.degerlendirmePuani >= this.filterValues.puanMin;
+      const matchesPuanMax = this.filterValues.puanMax == null || item.degerlendirmePuani <= this.filterValues.puanMax;
+      const matchesTarihMin = !this.filterValues.tarihMin || new Date(item.cagriTarihi) >= new Date(this.filterValues.tarihMin);
+      const matchesTarihMax = !this.filterValues.tarihMax || new Date(item.cagriTarihi) <= new Date(this.filterValues.tarihMax);
+      return matchesOperator && matchesSicil && matchesCagriId && matchesDegerlendiren && matchesDurum && matchesPuanMin && matchesPuanMax && matchesTarihMin && matchesTarihMax;
+    });
+    this.currentMainPage = 0;
+  }
+
+  clearFilters() {
+    this.filterValues = {
+      asistanAdiSoyadi: '',
+      asistanSicil: '',
+      cagriId: '',
+      degerlendireninAdi: '',
+      degerlendirmeDurumu: '',
+      puanMin: null,
+      puanMax: null,
+      tarihMin: null,
+      tarihMax: null
+    };
+    this.applyFilters();
+  }
+
+  toggleFilters() {
+    this.showFilters = !this.showFilters;
+  }
+
+  onRowClick(speech: EvaluationData) {
     this.selectedSpeech = speech;
-    console.log('Selected Speech:', this.selectedSpeech);
+    this.selectedEvaluation = speech;
+    this.showSpeechDetail = true;
   }
 
-  // New method to handle row clicks on the evaluation table
   onEvaluationRowClick(evaluation: EvaluationData) {
     this.selectedEvaluation = evaluation;
     this.showSpeechDetail = true;
-    console.log('Selected Evaluation:', this.selectedEvaluation);
   }
 
-  // New method to go back to the evaluation list
   goBackToList() {
     this.selectedEvaluation = null;
     this.showSpeechDetail = false;
+    
+    // Reinitialize sorting after returning to list view
+    setTimeout(() => {
+      this.evaluationDataSource.sort = this.sort;
+      this.evaluationDataSource.paginator = this.paginator;
+      
+      // Reconfigure sorting
+      this.evaluationDataSource.sortingDataAccessor = (item, property) => {
+        switch(property) {
+          case 'cagriTarihi': return new Date(item.cagriTarihi).getTime();
+          case 'degerlendirmePuani': return item.degerlendirmePuani;
+          case 'cagriSuresi': return Number(item.cagriSuresi);
+          default: return String(item[property as keyof EvaluationData]);
+        }
+      };
+    });
   }
 
   // Pagination handlers
-  onDailyPageChange(event: PageEvent) {
-    this.dailyPageIndex = event.pageIndex;
-    this.dailyPageSize = event.pageSize;
+  onMainPageChange(event: PageEvent) {
+    // Apply animation when page changes via paginator
+    if (this.currentMainPage !== event.pageIndex) {
+      this.isPageTransitioning = true;
+      // Reset animation state after animation completes
+      setTimeout(() => {
+        this.isPageTransitioning = false;
+      }, 500); // Allow time for the animation to complete
+    }
+    
+    this.currentMainPage = event.pageIndex;
   }
 
-  onWeeklyPageChange(event: PageEvent) {
-    this.weeklyPageIndex = event.pageIndex;
-    this.weeklyPageSize = event.pageSize;
-  }
-
-  onMonthlyPageChange(event: PageEvent) {
-    this.monthlyPageIndex = event.pageIndex;
-    this.monthlyPageSize = event.pageSize;
+  onRankingPageChange(event: PageEvent) {
+    this.currentRankingPage = event.pageIndex;
   }
 
   // Get paginated data for each table
+  getMainTableData() {
+    // Make sure we're working with the filtered data
+    console.log('Getting table data - filtered count:', this.filteredData.length);
+    console.log('Current filter values:', this.filterValues);
+    
+    let data = this.filteredData.slice();
+    // Apply sorting manually if sort is active
+    if (this.sort && this.sort.active && this.sort.direction !== '') {
+      const active = this.sort.active;
+      const direction = this.sort.direction;
+      data = data.sort((a, b) => {
+        let valueA = this.evaluationDataSource.sortingDataAccessor(a, active);
+        let valueB = this.evaluationDataSource.sortingDataAccessor(b, active);
+        if (valueA == null) valueA = '';
+        if (valueB == null) valueB = '';
+        const comparatorResult = valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+        return direction === 'asc' ? comparatorResult : -comparatorResult;
+      });
+    }
+    const start = this.currentMainPage * this.MAIN_TABLE_ITEMS;
+    return data.slice(start, start + this.MAIN_TABLE_ITEMS);
+  }
+
   getDailyPaginatedData() {
-    const start = this.dailyPageIndex * this.dailyPageSize;
-    return this.dailySpeeches.slice(start, start + this.dailyPageSize);
+    const start = this.currentRankingPage * this.RANKING_TABLE_ITEMS;
+    return this.dailySpeeches.slice(start, start + this.RANKING_TABLE_ITEMS);
   }
 
   getWeeklyPaginatedData() {
-    const start = this.weeklyPageIndex * this.weeklyPageSize;
-    return this.weeklySpeeches.slice(start, start + this.weeklyPageSize);
+    const start = this.currentRankingPage * this.RANKING_TABLE_ITEMS;
+    return this.weeklySpeeches.slice(start, start + this.RANKING_TABLE_ITEMS);
   }
 
   getMonthlyPaginatedData() {
-    const start = this.monthlyPageIndex * this.monthlyPageSize;
-    return this.monthlySpeeches.slice(start, start + this.monthlyPageSize);
+    const start = this.currentRankingPage * this.RANKING_TABLE_ITEMS;
+    return this.monthlySpeeches.slice(start, start + this.RANKING_TABLE_ITEMS);
+  }
+
+  // Expansion panel event handlers
+  onDailyPanelChange(event: any) {
+    this.dailyPanelExpanded = event.expanded;
+  }
+
+  onWeeklyPanelChange(event: any) {
+    this.weeklyPanelExpanded = event.expanded;
+  }
+
+  onMonthlyPanelChange(event: any) {
+    this.monthlyPanelExpanded = event.expanded;
+  }
+
+  // Pagination methods
+  getLastPage(): number {
+    return Math.ceil(this.filteredData.length / this.MAIN_TABLE_ITEMS) - 1;
+  }
+
+  getPageNumbersDropdown(): number[] {
+    return Array.from({ length: this.getLastPage() + 1 }, (_, i) => i);
+  }
+
+  goToPage(page: number) {
+    if (page >= 0 && page <= this.getLastPage()) {
+      // Apply animation when page changes
+      if (this.currentMainPage !== page) {
+        this.isPageTransitioning = true;
+        // Reset animation state after animation completes
+        setTimeout(() => {
+          this.isPageTransitioning = false;
+        }, 500); // Allow time for the animation to complete
+      }
+      
+      this.currentMainPage = page;
+      this.onMainPageChange({ pageIndex: page, pageSize: this.MAIN_TABLE_ITEMS, length: this.filteredData.length } as PageEvent);
+    }
+  }
+
+  // Get visible page numbers for pagination
+  getVisiblePageNumbers(): number[] {
+    const totalPages = this.getLastPage() + 1;
+    
+    // If we have 7 or fewer pages, show all of them
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i);
+    }
+    
+    // Otherwise, show a window of pages around the current page
+    let startPage = Math.max(0, this.currentMainPage - 2);
+    let endPage = Math.min(totalPages - 1, this.currentMainPage + 2);
+    
+    // Adjust start and end to always show 5 numbers if possible
+    if (startPage === 0) {
+      endPage = Math.min(4, totalPages - 1);
+    }
+    if (endPage === totalPages - 1) {
+      startPage = Math.max(0, totalPages - 5);
+    }
+
+    // Create array with page numbers
+    const visiblePages = [];
+    
+    // Always include first page
+    if (startPage > 0) {
+      visiblePages.push(0);
+      if (startPage > 1) {
+        visiblePages.push(-1); // -1 represents ellipsis
+      }
+    }
+    
+    // Add pages from start to end
+    for (let i = startPage; i <= endPage; i++) {
+      visiblePages.push(i);
+    }
+    
+    // Always include last page
+    if (endPage < totalPages - 1) {
+      if (endPage < totalPages - 2) {
+        visiblePages.push(-1); // -1 represents ellipsis
+      }
+      visiblePages.push(totalPages - 1);
+    }
+    
+    return visiblePages;
+  }
+
+  // Arama işlevleri
+  applySearch() {
+    if (!this.searchQuery || this.searchQuery.trim() === '') {
+      // Eğer arama sorgusu yoksa, filtreleri uygula
+      this.loadData();
+      this.applyFilters();
+      return;
+    }
+
+    const query = this.searchQuery.toLowerCase();
+    
+    // Tüm alanlarda arama yap
+    this.filteredData = this.allData.filter(item => {
+      return (
+        (item.asistanAdiSoyadi?.toLowerCase().includes(query)) || 
+        (item.asistanSicil?.toString().includes(query)) || 
+        (item.cagriId?.toString().includes(query)) || 
+        (item.degerlendireninAdi?.toLowerCase().includes(query)) || 
+        (item.degerlendirmeDurumu?.toLowerCase().includes(query)) ||
+        (item.degerlendirmeNo?.toString().includes(query)) ||
+        (item.degerlendirmePuani?.toString().includes(query)) ||
+        (item.cagriSuresi?.toString().includes(query)) ||
+        (new Date(item.cagriTarihi).toLocaleString().toLowerCase().includes(query))
+      );
+    });
+    
+    this.currentMainPage = 0; // İlk sayfaya dön
+  }
+
+  clearSearch() {
+    this.searchQuery = '';
+    this.loadData();
+    this.applyFilters();
+  }
+  
+  // Arama kutusu görünürlüğünü kontrol eden metot
+  toggleSearch() {
+    this.searchVisible = !this.searchVisible;
+    if (!this.searchVisible && this.searchQuery) {
+      // Arama kutusu kapandığında aramayı temizle
+      this.clearSearch();
+    }
   }
 }

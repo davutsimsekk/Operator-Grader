@@ -1,10 +1,15 @@
-<mat-toolbar color="primary" class="app-navbar">
+<mat-toolbar class="app-navbar">
   <div class="navbar-container">
     <!-- Logo/Brand -->
     <div class="navbar-brand">
       <a routerLink="/dashboard">
-        <span class="brand-text">MHRS Wind</span>
-        <span class="brand-subtitle">Operator Grader</span>
+        <div class="brand-logo-container">
+          <mat-icon class="brand-icon">support_agent</mat-icon>
+          <div class="brand-text-container">
+            <span class="brand-text">Çağrı Merkezi</span>
+            <span class="brand-subtitle">Operatör Değerlendirme Sistemi</span>
+          </div>
+        </div>
       </a>
     </div>
     
@@ -12,30 +17,78 @@
     <div class="navbar-links">
       <a mat-button routerLink="/dashboard" routerLinkActive="active-link">
         <mat-icon>dashboard</mat-icon>
-        Değerlendirme
+        <span>Değerlendirme</span>
+      </a>
+      <a mat-button routerLink="/reports" routerLinkActive="active-link">
+        <mat-icon>assessment</mat-icon>
+        <span>Raporlar</span>
       </a>
       <a mat-button routerLink="/asistans" routerLinkActive="active-link">
         <mat-icon>people</mat-icon>
-        Asistanlar
+        <span>Asistanlar</span>
       </a>
       <a mat-button routerLink="/settings" routerLinkActive="active-link">
         <mat-icon>settings</mat-icon>
-        Ayarlar
+        <span>Ayarlar</span>
       </a>
+    </div>
+    
+    <!-- Notifications Menu -->
+    <div class="notifications-menu">
+      <!-- Notifications Button -->
+      <button mat-icon-button class="notification-button" [matMenuTriggerFor]="notificationsMenu" matTooltip="Bildirimler">
+        <!-- Apply specific class to target this particular badge -->
+        <span class="notification-badge-wrapper">
+          <mat-icon [matBadge]="bildirimSayisi" [matBadgeHidden]="bildirimSayisi === 0" matBadgeColor="warn" matBadgeSize="small" matBadgePosition="above after" class="notification-icon">notifications</mat-icon>
+        </span>
+      </button>
+      <mat-menu #notificationsMenu="matMenu" class="notifications-dropdown" xPosition="before">
+        <div class="dropdown-header">
+          <span>Bildirimler</span>
+          <button mat-icon-button class="header-action" matTooltip="Tümünü Okundu İşaretle" (click)="tumBildirimleriOkunduIsaretle(); $event.stopPropagation();">
+            <mat-icon>done_all</mat-icon>
+          </button>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="notifications-container">
+          <div *ngIf="bildirimler.length === 0" class="empty-state">
+            <mat-icon>notifications_off</mat-icon>
+            <span>Bildiriminiz bulunmamaktadır</span>
+          </div>
+          <button mat-menu-item *ngFor="let bildirim of bildirimler" class="notification-item" [ngClass]="{'unread': !bildirim.okundu}">
+            <div class="notification-icon" [ngClass]="bildirim.tip">
+              <mat-icon>{{ getBildirimIcon(bildirim.tip) }}</mat-icon>
+            </div>
+            <div class="notification-content">
+              <div class="notification-header">
+                <span class="notification-title">{{ bildirim.baslik }}</span>
+                <span class="notification-time">{{ bildirim.tarih | date:'HH:mm' }}</span>
+              </div>
+              <p class="notification-message">{{ bildirim.mesaj }}</p>
+            </div>
+          </button>
+          <mat-divider *ngIf="bildirimler.length > 0"></mat-divider>
+          <button mat-menu-item class="view-all-button">
+            <mat-icon>list</mat-icon>
+            <span>Tüm Bildirimleri Görüntüle</span>
+          </button>
+        </div>
+      </mat-menu>
     </div>
     
     <!-- User Menu -->
     <div class="user-menu">
       <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
-        <mat-icon>account_circle</mat-icon>
-        <span>{{ authService.getCurrentUsername() }}</span>
-        <mat-icon>arrow_drop_down</mat-icon>
+        <mat-icon class="user-icon">person</mat-icon>
+        <span class="username">{{ authService.getCurrentUsername() }}</span>
+        <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
       </button>
-      <mat-menu #userMenu="matMenu">
-        <button mat-menu-item>
+      <mat-menu #userMenu="matMenu" class="user-dropdown">
+        <button mat-menu-item routerLink="/settings" [queryParams]="{tab: 'profile'}">
           <mat-icon>person</mat-icon>
           <span>Profil</span>
         </button>
+        <mat-divider></mat-divider>
         <button mat-menu-item (click)="logout()">
           <mat-icon>exit_to_app</mat-icon>
           <span>Çıkış</span>
