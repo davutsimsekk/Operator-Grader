@@ -831,6 +831,12 @@ tr.selected::after {
   transition: var(--transition);
 }
 
+.speech-details-view .detail-items {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px 32px;
+}
+
 /* Konusma Bilgisi Styles */
 .konusma-bilgisi .detail-items {
   display: flex;
@@ -1263,4 +1269,10 @@ tr.selected::after {
 :host ::ng-deep .page-selector .mat-mdc-select-arrow {
   color: var(--primary-color);
   transform: scale(0.8); /* Smaller arrow */
+}
+
+.speech-text {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  line-height: 1.5;
+  font-size: 1.02em;
 }

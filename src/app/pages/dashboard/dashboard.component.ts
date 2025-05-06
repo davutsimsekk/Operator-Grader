@@ -240,13 +240,29 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   onRowClick(speech: EvaluationData) {
     this.selectedSpeech = speech;
-    this.selectedEvaluation = speech;
-    this.showSpeechDetail = true;
+    // Fetch detailed evaluation data to ensure transkript is loaded
+    this.evaluationService.getEvaluationById(speech.cagriId).subscribe(detailedEvaluation => {
+      this.selectedEvaluation = detailedEvaluation;
+      this.showSpeechDetail = true;
+    }, error => {
+      console.error('Error fetching detailed evaluation data:', error);
+      // Fallback to the initially loaded data if detail fetch fails
+      this.selectedEvaluation = speech; 
+      this.showSpeechDetail = true;
+    });
   }
 
   onEvaluationRowClick(evaluation: EvaluationData) {
-    this.selectedEvaluation = evaluation;
-    this.showSpeechDetail = true;
+    // Fetch detailed evaluation data to ensure transkript is loaded
+    this.evaluationService.getEvaluationById(evaluation.cagriId).subscribe(detailedEvaluation => {
+      this.selectedEvaluation = detailedEvaluation;
+      this.showSpeechDetail = true;
+    }, error => {
+      console.error('Error fetching detailed evaluation data:', error);
+      // Fallback to the initially loaded data if detail fetch fails
+      this.selectedEvaluation = evaluation;
+      this.showSpeechDetail = true;
+    });
   }
 
   goBackToList() {

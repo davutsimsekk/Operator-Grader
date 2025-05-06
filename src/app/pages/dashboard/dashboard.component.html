@@ -90,7 +90,7 @@
         
         <mat-card-content class="scrollable-content">
           <!-- Speech Details View -->
-          <div *ngIf="showSpeechDetail" class="speech-details-view">
+          <div *ngIf="showSpeechDetail" class="speech-details-view" style="overflow: auto; max-height: 400px;">
             <h3>Konuşma Bilgileri</h3>
             <div class="detail-items">
               <div class="detail-item">
@@ -125,6 +125,11 @@
                 <mat-icon>assignment</mat-icon>
                 <p><strong>Değerlendirme No:</strong> {{selectedEvaluation?.degerlendirmeNo}}</p>
               </div>
+            </div>
+            <!-- Database content display section -->
+            <div class="database-content-display" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee;">
+              <h4>Konuşma Metni:</h4>
+              <pre style="white-space: pre-wrap; word-wrap: break-word;">{{selectedEvaluation?.transkript}}</pre>
             </div>
           </div>
 

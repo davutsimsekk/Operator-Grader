@@ -12,6 +12,7 @@ export interface EvaluationData {
   degerlendireninAdi: string;
   degerlendirmeNo: string;
   degerlendirmePuani: number;
+  transkript?: string; 
 }
 
 @Injectable({
@@ -29,4 +30,4 @@ export class EvaluationService {
   getEvaluationById(id: string): Observable<EvaluationData> {
     return this.http.get<EvaluationData>(`${this.apiUrl}/evaluations/${id}`);
   }
-} 
+}
