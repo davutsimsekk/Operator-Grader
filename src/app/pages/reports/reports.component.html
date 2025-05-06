@@ -141,14 +141,12 @@
           <mat-icon mat-card-avatar>analytics</mat-icon>
           <mat-card-title>Performans Trendi</mat-card-title>
         </mat-card-header>
-        <mat-card-content class="chart-content">
-          <div class="chart-wrapper">
-            <canvas baseChart
-              [type]="performanceChartType"
-              [data]="performanceChartData"
-              [options]="performanceChartOptions">
-            </canvas>
-          </div>
+        <mat-card-content>
+          <canvas baseChart
+            [type]="performanceChartType"
+            [data]="performanceChartData"
+            [options]="performanceChartOptions">
+          </canvas>
         </mat-card-content>
       </mat-card>
     </div>
