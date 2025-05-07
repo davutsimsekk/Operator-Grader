@@ -86,6 +86,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   averageWordLength: number = 0;
   mostFrequentWords: string = '';
 
+  // Filtrelenmiş kelimeleri saklamak için dizi
+  filteredWords: any[] = [];
+
   // Audio visualizer bileşeni referansını ekliyoruz
   @ViewChild('audioVisualizer') audioVisualizer!: AudioVisualizerComponent;
   
@@ -187,26 +190,28 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       this.allData = data; // Orijinal veriyi sakla
       this.applyFilters();
       
+      // Get daily, weekly, monthly data without sorting again
+      // (Backend already returns data in the desired sort order)
       // Filter and sort data for daily rankings (last 24 hours)
       const oneDayAgo = new Date();
       oneDayAgo.setDate(oneDayAgo.getDate() - 1);
       this.dailySpeeches = data
-        .filter(evaluation => new Date(evaluation.cagriTarihi) >= oneDayAgo)
-        .sort((a, b) => b.degerlendirmePuani - a.degerlendirmePuani);
+        .filter(evaluation => new Date(evaluation.cagriTarihi) >= oneDayAgo);
+        // No longer sorting here as backend returns in the desired order
 
       // Filter and sort data for weekly rankings (last 7 days)
       const oneWeekAgo = new Date();
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
       this.weeklySpeeches = data
-        .filter(evaluation => new Date(evaluation.cagriTarihi) >= oneWeekAgo)
-        .sort((a, b) => b.degerlendirmePuani - a.degerlendirmePuani);
+        .filter(evaluation => new Date(evaluation.cagriTarihi) >= oneWeekAgo);
+        // No longer sorting here as backend returns in the desired order
 
       // Filter and sort data for monthly rankings (last 30 days)
       const oneMonthAgo = new Date();
       oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
       this.monthlySpeeches = data
-        .filter(evaluation => new Date(evaluation.cagriTarihi) >= oneMonthAgo)
-        .sort((a, b) => b.degerlendirmePuani - a.degerlendirmePuani);
+        .filter(evaluation => new Date(evaluation.cagriTarihi) >= oneMonthAgo);
+        // No longer sorting here as backend returns in the desired order
     });
   }
 
@@ -270,12 +275,55 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       
       this.selectedEvaluation = detailedEvaluation;
       this.showSpeechDetail = true;
+      
+      // Parse filtered words if they exist
+      this.parseFilteredWords(detailedEvaluation);
     }, error => {
       console.error('Error fetching detailed evaluation data:', error);
       // Fallback to the initially loaded data if detail fetch fails
       this.selectedEvaluation = evaluation;
       this.showSpeechDetail = true;
     });
+  }
+
+  // Parse filtered profanity words from JSON data
+  parseFilteredWords(evaluation: EvaluationData) {
+    this.filteredWords = [];
+    
+    if (evaluation && evaluation.filtrelihKelimeler) {
+      try {
+        // Parse the JSON string into an object
+        const filteredWordsData = JSON.parse(evaluation.filtrelihKelimeler);
+        
+        // Transform the object into a format that's easier to display
+        this.filteredWords = Object.keys(filteredWordsData).map(word => {
+          const wordData = filteredWordsData[word];
+          return {
+            word: word,
+            count: wordData.count, // Artık doğrudan count değerini alıyoruz
+            occurrences: wordData.occurrences // Occurrences dizisini doğrudan alıyoruz
+          };
+        });
+        
+        console.log('Parsed filtered words:', this.filteredWords);
+      } catch (e) {
+        console.error('Error parsing filtered words JSON:', e);
+        this.filteredWords = [];
+      }
+    }
+  }
+
+  // Format seconds to MM:SS format
+  formatTime(seconds: number): string {
+    if (isNaN(seconds)) return '00:00';
+    
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : `${remainingSeconds}`;
+    
+    return `${formattedMinutes}:${formattedSeconds}`;
   }
 
   goBackToList() {

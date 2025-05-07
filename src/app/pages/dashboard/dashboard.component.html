@@ -130,6 +130,26 @@
             <div class="database-content-display" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee;">
               <h4>Konuşma Metni:</h4>
               <pre style="white-space: pre-wrap; word-wrap: break-word;">{{selectedEvaluation?.transkript}}</pre>
+              
+              <!-- Filtrelenmiş Kelimeler Bölümü -->
+              <div *ngIf="filteredWords && filteredWords.length > 0" class="filtered-words-section" style="margin-top: 20px; padding-top: 10px; border-top: 1px solid #eee;">
+                <h4>
+                  <mat-icon style="vertical-align: middle; color: #e74c3c; margin-right: 8px;">warning</mat-icon>
+                  Filtrelenmiş Kelimeler
+                </h4>
+                <div class="filtered-words-container">
+                  <div *ngFor="let word of filteredWords" class="filtered-word-item" style="margin-bottom: 10px; padding: 8px; background-color: rgba(231, 76, 60, 0.05); border-left: 3px solid #e74c3c; border-radius: 4px;">
+                    <div style="font-weight: 500; color: #c0392b; margin-bottom: 4px;">
+                      <strong>Kelime: "{{word.word}}"</strong> 
+                      <span style="font-weight: normal; color: #7f8c8d;">({{word.count}} kez tespit edildi)</span>
+                    </div>
+                    <div *ngFor="let occurrence of word.occurrences" style="display: flex; align-items: center; font-size: 0.9em; margin-top: 2px;">
+                      <mat-icon style="font-size: 16px; height: 16px; width: 16px; margin-right: 5px; color: #7f8c8d;">schedule</mat-icon>
+                      <span>{{formatTime(occurrence.start_time)}} - {{formatTime(occurrence.end_time)}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -408,15 +428,6 @@
           <button mat-icon-button matTooltip="{{isPlaying ? 'Duraklat' : 'Oynat'}}" (click)="playPauseAudio()" class="play-button">
             <mat-icon class="playback-icon">{{isPlaying ? 'pause_circle_filled' : 'play_circle_filled'}}</mat-icon>
           </button>
-        </div>
-        
-        <!-- Süre bilgisi visualizer içinden geliyor, sadece burada görüntülüyoruz -->
-        <div class="player-right" *ngIf="audioVisualizer">
-          <div class="time-display-dashboard">
-            <span class="current-time">{{audioVisualizer.formattedCurrentTime}}</span>
-            <span class="time-separator">/</span>
-            <span class="total-time">{{audioVisualizer.formattedDuration}}</span>
-          </div>
         </div>
       </div>
     </div>
