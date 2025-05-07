@@ -402,16 +402,25 @@
 
   <!-- Sound Graph Card -->
   <mat-card class="sound-graph-card">
-    <mat-card-header>
-      <mat-icon mat-card-avatar>equalizer</mat-icon>
-      <mat-card-title>Ses Grafiği</mat-card-title>
-      <div class="playback-controls" *ngIf="selectedEvaluation">
-        <button mat-icon-button matTooltip="{{isPlaying ? 'Duraklat' : 'Oynat'}}" (click)="playPauseAudio()" class="play-button">
-          <mat-icon>{{isPlaying ? 'pause_circle_filled' : 'play_circle_filled'}}</mat-icon>
-        </button>
+    <div class="compact-header">
+      <div class="audio-player-controls" *ngIf="selectedEvaluation">
+        <div class="player-left">
+          <button mat-icon-button matTooltip="{{isPlaying ? 'Duraklat' : 'Oynat'}}" (click)="playPauseAudio()" class="play-button">
+            <mat-icon class="playback-icon">{{isPlaying ? 'pause_circle_filled' : 'play_circle_filled'}}</mat-icon>
+          </button>
+        </div>
+        
+        <!-- Süre bilgisi visualizer içinden geliyor, sadece burada görüntülüyoruz -->
+        <div class="player-right" *ngIf="audioVisualizer">
+          <div class="time-display-dashboard">
+            <span class="current-time">{{audioVisualizer.formattedCurrentTime}}</span>
+            <span class="time-separator">/</span>
+            <span class="total-time">{{audioVisualizer.formattedDuration}}</span>
+          </div>
+        </div>
       </div>
-    </mat-card-header>
-    <mat-card-content>
+    </div>
+    <mat-card-content class="full-width-content">
       <div class="sound-graph-wrapper">
         <!-- Audio Visualizer bileşenine seçilen değerlendirmeyi gönderiyoruz -->
         <app-audio-visualizer *ngIf="selectedEvaluation" #audioVisualizer 

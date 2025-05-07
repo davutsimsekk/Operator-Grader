@@ -19,6 +19,12 @@ export class AudioVisualizerComponent implements AfterViewInit, OnChanges {
   regionsPlugin!: any;
   isAudioReady: boolean = false; // Ses dosyasının yüklenip yüklenmediğini takip eder
   
+  // Süre bilgisi için değişkenler
+  currentTime: number = 0;
+  duration: number = 0;
+  formattedCurrentTime: string = '00:00';
+  formattedDuration: string = '00:00';
+  
   constructor(private cdr: ChangeDetectorRef) {} // ✅ Change detection service
   
   ngOnChanges(changes: SimpleChanges): void {
@@ -60,9 +66,11 @@ export class AudioVisualizerComponent implements AfterViewInit, OnChanges {
       this.isAudioReady = true;
       this.audioReady = true;
       this.audioReadyChange.emit(this.audioReady);
-      // Önemli bölgeleri vurgulamak için örnek bir kırmızı bölge ekledik
-      // Gerçek uygulamada bu, değerlendirme sonuçlarından gelebilir
-      this.addRedRegion(0, 5);
+      
+      // Toplam süre bilgisini al
+      this.duration = this.wavesurfer.getDuration();
+      this.formattedDuration = this.formatTime(this.duration);
+      
       this.cdr.detectChanges();
     });
 
@@ -83,6 +91,13 @@ export class AudioVisualizerComponent implements AfterViewInit, OnChanges {
       this.isAudioReady = false;
       this.audioReady = false;
       this.audioReadyChange.emit(this.audioReady);
+      this.cdr.detectChanges();
+    });
+    
+    // Zaman güncellemesi için olay dinleyicisi
+    this.wavesurfer.on('timeupdate', (currentTime) => {
+      this.currentTime = currentTime;
+      this.formattedCurrentTime = this.formatTime(currentTime);
       this.cdr.detectChanges();
     });
   }
@@ -168,5 +183,20 @@ export class AudioVisualizerComponent implements AfterViewInit, OnChanges {
     } else {
       console.error('Regions plugin is not initialized');
     }
+  }
+  
+  // Saniyeyi dakika:saniye formatına dönüştürmek için yardımcı fonksiyon
+  formatTime(timeInSeconds: number): string {
+    if (isNaN(timeInSeconds) || timeInSeconds === Infinity) {
+      return '00:00';
+    }
+    
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = Math.floor(timeInSeconds % 60);
+    
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    const formattedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+    
+    return `${formattedMinutes}:${formattedSeconds}`;
   }
 }

@@ -81,7 +81,7 @@
   gap: 24px;
   flex: 1;
   overflow: hidden;
-  height: calc(100vh - 200px); /* Account for sound graph card */
+  height: calc(100vh - 230px); /* Reduced height to give more space to sound graph */
 }
 
 .evaluation-list-container {
@@ -417,26 +417,113 @@ mat-expansion-panel mat-card {
 
 /* Sound graph card styling */
 .sound-graph-card {
-  margin-top: 20px;
   width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 16px;
+  flex-shrink: 0;
+  height: 25%;
 }
 
 .sound-graph-wrapper {
-  padding: 10px;
-  background-color: #f8f9fa;
-  border-radius: 4px;
-  height: 150px;
+  width: 100%;
+  height: 200px;
+  padding: 0;
+  margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.sound-graph-wrapper .no-audio-message {
-  color: #6c757d;
-  font-style: italic;
-  text-align: center;
+/* Style for the audio visualizer to ensure it takes full width */
+.sound-graph-wrapper app-audio-visualizer {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.full-width-content {
+  width: 100%;
+  padding: 0 !important;
+}
+
+/* Full width content for sound graph */
+.full-width-content {
+  width: 100%;
+  padding: 0 !important;
+}
+
+/* Updated compact header style with play button on left */
+.compact-header {
+  display: flex;
+  justify-content: flex-start; /* Changed from flex-end to flex-start to align to left */
+  align-items: center;
+  padding: 6px 16px; /* Minimal padding */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background: linear-gradient(to right, rgba(52, 152, 219, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+  min-height: 24px; /* Minimal height */
+}
+
+/* Adjust playback controls to be left-aligned */
+.playback-controls {
+  display: flex;
+  align-items: center;
+  margin-right: auto; /* Changed from margin-left: auto to margin-right: auto */
+}
+
+.playback-controls .play-button {
+  color: #3498db;
+  transition: all 0.2s ease;
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  transform: scale(1.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.playback-controls .play-button .mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(1.6); /* İkonun boyutunu büyüttüm */
+  margin: 0; /* Kenar boşluklarını kaldırdım */
+  padding: 0; /* Dolguları kaldırdım */
+  overflow: visible; /* İkonun kesilen kısımlarını görünür hale getirdim */
+}
+
+.playback-controls .play-button:hover {
+  color: #2980b9;
+  transform: scale(1.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow on hover */
+}
+
+/* Playback ikonu için özel stil */
+.playback-icon {
+  color: #3498db !important; /* Mavi renk */
+  font-size: 30px !important; /* 26px'ten büyütüldü */
+  width: 30px !important; /* 26px'ten büyütüldü */
+  height: 30px !important; /* 26px'ten büyütüldü */
+  display: block !important;
+  overflow: visible !important; /* İkonun kesilmesini önler */
+  position: relative !important;
+  transform: translateY(-1px) !important; /* İkonu yukarı taşıyor */
+  margin-top: -1px !important; /* Ek yukarı taşıma için */
+}
+
+/* New compact header style */
+.compact-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 6px 16px; /* Minimal padding */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background: linear-gradient(to right, rgba(52, 152, 219, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+  min-height: 24px; /* Minimal height */
 }
 
 .playback-controls {
@@ -445,10 +532,19 @@ mat-expansion-panel mat-card {
   align-items: center;
 }
 
-/* Oynat/duraklat düğmesi için stil */
 .playback-controls .mat-icon-button {
   color: #3498db;
   transition: all 0.2s ease;
+  width: 32px; /* Smaller button */
+  height: 32px; /* Smaller button */
+  line-height: 32px; /* Vertically center icon */
+}
+
+.playback-controls .mat-icon-button .mat-icon {
+  font-size: 24px; /* Smaller icon */
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
 }
 
 .playback-controls .mat-icon-button:hover {
@@ -798,7 +894,7 @@ tr.selected::after {
   width: auto; /* Adjust width for flexbox layout */
   margin-top: 16px; /* Add space above the sound graph */
   flex-shrink: 0; /* Prevent shrinking */
-  height: 20%; /* Reduce height to 1/5 of the container */
+  height: 25%; /* Increase height from 20% to 25% of the container */
 }
 
 .main-content {
@@ -1310,4 +1406,93 @@ tr.selected::after {
   font-family: 'Georgia', 'Times New Roman', serif;
   line-height: 1.5;
   font-size: 1.02em;
+}
+
+/* Audio player ve süre bilgisi için stil tanımlamaları */
+.audio-player-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 8px 16px;
+  background: linear-gradient(to right, rgba(52, 152, 219, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.player-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-right {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.time-display-dashboard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(52, 152, 219, 0.1);
+  padding: 4px 10px;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  color: #2c3e50;
+  min-width: 80px;
+  text-align: center;
+}
+
+.time-display-dashboard .current-time {
+  font-weight: 600;
+  color: #e74c3c;
+}
+
+.time-display-dashboard .time-separator {
+  margin: 0 4px;
+  color: #7f8c8d;
+}
+
+.time-display-dashboard .total-time {
+  color: #3498db;
+  font-weight: 500;
+}
+
+/* Play button stilini düzeltme */
+.play-button {
+  width: 46px; /* 42px'ten büyütüldü */
+  height: 46px; /* 42px'ten büyütüldü */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  margin-right: 16px;
+  background-color: rgba(52, 152, 219, 0.1);
+  position: relative;
+  overflow: visible;
+}
+
+.play-button:hover {
+  background-color: rgba(52, 152, 219, 0.2);
+}
+
+.play-button .mat-icon {
+  font-size: 30px; /* 28px'ten büyütüldü */
+  width: 30px; /* 28px'ten büyütüldü */
+  height: 30px; /* 28px'ten büyütüldü */
+}
+
+/* Playback ikonu için özel stil */
+.playback-icon {
+  color: #3498db !important; /* Mavi renk */
+  font-size: 28px !important; /* 26px'ten büyütüldü */
+  width: 28px !important; /* 26px'ten büyütüldü */
+  height: 28px !important; /* 26px'ten büyütüldü */
+  display: block !important;
+  overflow: visible !important; /* İkonun kesilmesini önler */
+  position: relative !important;
+  transform: translateY(-2px) !important; /* İkonu yukarı taşıyor */
+  margin-top: -2px !important; /* Ek yukarı taşıma için */
 }

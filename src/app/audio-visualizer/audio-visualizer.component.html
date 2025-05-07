@@ -1,2 +1,8 @@
-<div #waveform style="width: 100%; height: 150px; background: #f3f3f3;"></div>
-<button (click)="playPause()">▶ / ⏸</button>
+<div class="audio-visualizer-container">
+  <div #waveform class="waveform-container"></div>
+  <div class="time-display">
+    <span class="current-time">{{formattedCurrentTime}}</span>
+    <span class="time-separator"> / </span>
+    <span class="total-time">{{formattedDuration}}</span>
+  </div>
+</div>
