@@ -429,6 +429,14 @@
             <mat-icon class="playback-icon">{{isPlaying ? 'pause_circle_filled' : 'play_circle_filled'}}</mat-icon>
           </button>
         </div>
+                <!-- Süre bilgisi visualizer içinden geliyor, sadece burada görüntülüyoruz -->
+                <div class="player-right" *ngIf="audioVisualizer">
+                  <div class="time-display-dashboard">
+                    <span class="current-time">{{audioVisualizer.formattedCurrentTime}}</span>
+                    <span class="time-separator">/</span>
+                    <span class="total-time">{{audioVisualizer.formattedDuration}}</span>
+                  </div>
+                </div>
       </div>
     </div>
     <mat-card-content class="full-width-content">
