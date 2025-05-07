@@ -417,19 +417,54 @@ mat-expansion-panel mat-card {
 
 /* Sound graph card styling */
 .sound-graph-card {
-  height: 180px;
-  margin-top: 24px;
-  border-top: 4px solid var(--accent-color);
+  margin-top: 20px;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .sound-graph-wrapper {
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  height: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  background: rgba(52, 152, 219, 0.02);
-  border-radius: var(--border-radius);
-  border: 2px dashed rgba(52, 152, 219, 0.2);
+}
+
+.sound-graph-wrapper .no-audio-message {
+  color: #6c757d;
+  font-style: italic;
+  text-align: center;
+}
+
+.playback-controls {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+/* Oynat/duraklat düğmesi için stil */
+.playback-controls .mat-icon-button {
+  color: #3498db;
+  transition: all 0.2s ease;
+}
+
+.playback-controls .mat-icon-button:hover {
+  color: #2980b9;
+  transform: scale(1.1);
+}
+
+/* Ses grafiği için responsive düzenlemeler */
+@media (max-width: 768px) {
+  .sound-graph-card {
+    margin-top: 10px;
+  }
+  
+  .sound-graph-wrapper {
+    height: 120px;
+  }
 }
 
 /* Paginator styling */

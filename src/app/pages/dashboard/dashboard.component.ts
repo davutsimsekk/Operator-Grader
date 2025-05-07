@@ -21,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { AudioVisualizerComponent } from '../../audio-visualizer/audio-visualizer.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -42,7 +43,8 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
     MatDatepickerModule,
     MatNativeDateModule, // Required for date picker
     MatButtonModule,
-    MatTooltipModule
+    MatTooltipModule,
+    AudioVisualizerComponent // Audio visualizer bileşenini import ediyoruz
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -84,6 +86,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   averageWordLength: number = 0;
   mostFrequentWords: string = '';
 
+  // Audio visualizer bileşeni referansını ekliyoruz
+  @ViewChild('audioVisualizer') audioVisualizer!: AudioVisualizerComponent;
+  
+  // Ses durumunu takip etmek için yeni değişkenler
+  isPlaying: boolean = false;
+  audioReady: boolean = false;
+  
   dailySpeeches: EvaluationData[] = [];
   weeklySpeeches: EvaluationData[] = [];
   monthlySpeeches: EvaluationData[] = [];
@@ -255,6 +264,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   onEvaluationRowClick(evaluation: EvaluationData) {
     // Fetch detailed evaluation data to ensure transkript is loaded
     this.evaluationService.getEvaluationById(evaluation.cagriId).subscribe(detailedEvaluation => {
+      console.log("Selected evaluation - FULL DATA:", JSON.stringify(detailedEvaluation));
+      console.log("Audio path type:", typeof detailedEvaluation.sesDosyasi);
+      console.log("Audio file path:", detailedEvaluation.sesDosyasi);
+      
       this.selectedEvaluation = detailedEvaluation;
       this.showSpeechDetail = true;
     }, error => {
@@ -470,6 +483,26 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     if (!this.searchVisible && this.searchQuery) {
       // Arama kutusu kapandığında aramayı temizle
       this.clearSearch();
+    }
+  }
+  
+  // Audio visualizer kontrolü için eklenen metod
+  playPauseAudio() {
+    if (this.audioVisualizer && this.selectedEvaluation) {
+      this.audioVisualizer.playPause();
+      // Görsel durum güncellemesi için oynatma durumunu senkronize et
+      this.isPlaying = this.audioVisualizer.isPlaying;
+    }
+  }
+  
+  // Ses dosyasının hazır olma durumunu takip etmek için
+  onAudioReadyChange(value: boolean) {
+    console.log('Audio ready state changed:', value);
+    this.audioReady = value;
+    
+    // Ses dosyasının oynatma durumunu senkronize et
+    if (this.audioVisualizer) {
+      this.isPlaying = this.audioVisualizer.isPlaying;
     }
   }
 }

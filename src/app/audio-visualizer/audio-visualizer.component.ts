@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, ChangeDetectorRef, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import WaveSurfer from 'wavesurfer.js';
 import RegionsPlugin from 'wavesurfer.js/dist/plugins/regions.js';
 
@@ -7,30 +7,44 @@ import RegionsPlugin from 'wavesurfer.js/dist/plugins/regions.js';
   templateUrl: './audio-visualizer.component.html',
   styleUrls: ['./audio-visualizer.component.css']
 })
-export class AudioVisualizerComponent implements AfterViewInit {
+export class AudioVisualizerComponent implements AfterViewInit, OnChanges {
   @ViewChild('waveform', { static: false }) waveform!: ElementRef;
+  @Input() audioSource: string = '/assets/sample.mp3'; // Varsayılan ses dosyası
+  @Input() audioReady: boolean = false; // Ses dosyasının hazır olup olmadığını kontrol etmek için
+  @Output() audioReadyChange = new EventEmitter<boolean>(); // For two-way binding
+  @Input() evaluation: any; // Değerlendirme nesnesi
 
   wavesurfer!: WaveSurfer;
-  
+  isPlaying: boolean = false; // Oynatma durumunu takip etmek için
   regionsPlugin!: any;
+  isAudioReady: boolean = false; // Ses dosyasının yüklenip yüklenmediğini takip eder
+  
   constructor(private cdr: ChangeDetectorRef) {} // ✅ Change detection service
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    // Ses kaynağı değiştiğinde dalga formunu güncelle
+    if ((changes['audioSource'] || changes['evaluation']) && this.wavesurfer) {
+      this.loadAudio();
+    }
+  }
+  
   ngAfterViewInit() {
     console.log('Initializing WaveSurfer...');
 
-
-
     this.wavesurfer = WaveSurfer.create({
       container: this.waveform.nativeElement,
-      waveColor: 'blue',
-      progressColor: 'red',
-      cursorColor: 'black',
-      barWidth: 3,
+      waveColor: '#3498db', // Mavi dalga rengi - dashboard temasına uygun
+      progressColor: '#e74c3c', // Kırmızı ilerleme rengi - dashboard temasına uygun
+      cursorColor: 'rgba(0, 0, 0, 0.5)', // Yarı saydam siyah imleç
+      barWidth: 2, // Daha ince çubuklar
+      barGap: 1, // Çubuklar arası boşluk
+      barRadius: 2, // Yuvarlatılmış çubuk kenarları
       autoCenter: true,
       height: 100,
       backend: 'MediaElement',
+      normalize: true, // Dalga formunu normalize et
     });
     console.log('WaveSurfer instance:', this.wavesurfer);
-
 
     // ✅ Register Regions Plugin
     this.regionsPlugin = this.wavesurfer.registerPlugin(RegionsPlugin.create());
@@ -38,22 +52,109 @@ export class AudioVisualizerComponent implements AfterViewInit {
     // ✅ Force Angular to detect changes (important)
     // this.cdr.detectChanges();
 
-    // ✅ Load the audio file
-    this.wavesurfer.load('/assets/sample.mp3');
-
+    // Ses dosyasını yükle
+    this.loadAudio();
 
     this.wavesurfer.on('ready', () => {
       console.log('WaveSurfer is ready!');
+      this.isAudioReady = true;
+      this.audioReady = true;
+      this.audioReadyChange.emit(this.audioReady);
+      // Önemli bölgeleri vurgulamak için örnek bir kırmızı bölge ekledik
+      // Gerçek uygulamada bu, değerlendirme sonuçlarından gelebilir
       this.addRedRegion(0, 5);
+      this.cdr.detectChanges();
+    });
+
+    this.wavesurfer.on('play', () => {
+      this.isPlaying = true;
+      console.log('Audio is playing');
+      this.cdr.detectChanges();
+    });
+
+    this.wavesurfer.on('pause', () => {
+      this.isPlaying = false;
+      console.log('Audio is paused');
+      this.cdr.detectChanges();
     });
 
     this.wavesurfer.on('error', (err) => {
       console.error('WaveSurfer error:', err);
+      this.isAudioReady = false;
+      this.audioReady = false;
+      this.audioReadyChange.emit(this.audioReady);
+      this.cdr.detectChanges();
     });
   }
 
+  // Ses dosyasını yüklemek için ayrı bir method
+  loadAudio() {
+    if (this.wavesurfer) {
+      let audioPath = this.audioSource; // Default path
+      
+      console.log("Original audio source:", this.audioSource);
+      console.log("Original evaluation:", this.evaluation);
+      
+      // Check if we have an evaluation with a sound file path
+      if (this.evaluation?.sesDosyasi) {
+        const originalPath = this.evaluation.sesDosyasi;
+        console.log("Original path from database:", originalPath);
+        
+        // Extract just the filename regardless of path format
+        let filename = originalPath;
+        
+        // Handle file:/// URLs
+        if (originalPath.includes('/')) {
+          filename = originalPath.split('/').pop() || '';
+        }
+        // Handle backslash paths (Windows style)
+        else if (originalPath.includes('\\')) {
+          filename = originalPath.split('\\').pop() || '';
+        }
+        
+        // Use the Flask endpoint to serve the audio file
+        audioPath = `http://localhost:5000/audio/${filename}`;
+        console.log("Converted to API path:", audioPath);
+      }
+      
+      console.log('Loading audio from path:', audioPath);
+      
+      // Yükleme başlamadan önce durumu sıfırla
+      this.isAudioReady = false;
+      this.audioReady = false;
+      this.audioReadyChange.emit(this.audioReady);
+      
+      // Ses dosyasını yükle
+      this.wavesurfer.load(audioPath);
+    }
+  }
+
   playPause() {
-    this.wavesurfer.playPause();
+    try {
+      if (!this.wavesurfer) {
+        console.error('WaveSurfer is not initialized');
+        return;
+      }
+      
+      if (!this.isAudioReady) {
+        console.log('Audio is not ready yet, waiting...');
+        // Ses hazır olmadığında hata oluşmasını önlemek için
+        this.wavesurfer.once('ready', () => {
+          console.log('Audio is now ready, playing...');
+          this.wavesurfer.playPause();
+          this.isPlaying = !this.isPlaying;
+          this.cdr.detectChanges();
+        });
+        return;
+      }
+      
+      console.log('Toggling play/pause. Current state:', this.isPlaying ? 'Playing' : 'Paused');
+      this.wavesurfer.playPause();
+      this.isPlaying = !this.isPlaying;
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('Error in playPause:', error);
+    }
   }
 
   addRedRegion(start: number, end: number) {
@@ -61,7 +162,7 @@ export class AudioVisualizerComponent implements AfterViewInit {
       this.regionsPlugin.addRegion({
         start: start,
         end: end,
-        color: 'rgba(255, 0, 0, 0.5)',
+        color: 'rgba(255, 0, 0, 0.3)',
       });
       console.log(`Added red region: ${start}s to ${end}s`);
     } else {

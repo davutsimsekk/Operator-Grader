@@ -12,6 +12,7 @@ export interface EvaluationData {
   degerlendireninAdi: string;
   degerlendirmeNo: string;
   degerlendirmePuani: number;
+  sesDosyasi?: string; // Ses dosyası yolu
   transkript?: string; 
 }
 

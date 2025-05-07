@@ -405,10 +405,21 @@
     <mat-card-header>
       <mat-icon mat-card-avatar>equalizer</mat-icon>
       <mat-card-title>Ses Grafiği</mat-card-title>
+      <div class="playback-controls" *ngIf="selectedEvaluation">
+        <button mat-icon-button matTooltip="{{isPlaying ? 'Duraklat' : 'Oynat'}}" (click)="playPauseAudio()" class="play-button">
+          <mat-icon>{{isPlaying ? 'pause_circle_filled' : 'play_circle_filled'}}</mat-icon>
+        </button>
+      </div>
     </mat-card-header>
     <mat-card-content>
       <div class="sound-graph-wrapper">
-        <p>Ses grafiği burada gösterilecek.</p>
+        <!-- Audio Visualizer bileşenine seçilen değerlendirmeyi gönderiyoruz -->
+        <app-audio-visualizer *ngIf="selectedEvaluation" #audioVisualizer 
+          [evaluation]="selectedEvaluation" 
+          [(audioReady)]="audioReady"
+          (audioReadyChange)="onAudioReadyChange($event)">
+        </app-audio-visualizer>
+        <p *ngIf="!selectedEvaluation" class="no-audio-message">Ses dosyasını görmek için bir değerlendirme seçiniz.</p>
       </div>
     </mat-card-content>
   </mat-card>
