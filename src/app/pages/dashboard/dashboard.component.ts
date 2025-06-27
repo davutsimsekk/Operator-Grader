@@ -258,11 +258,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.evaluationService.getEvaluationById(speech.cagriId).subscribe(detailedEvaluation => {
       this.selectedEvaluation = detailedEvaluation;
       this.showSpeechDetail = true;
+      // Parse filtered words if they exist
+      this.parseFilteredWords(detailedEvaluation);
     }, error => {
       console.error('Error fetching detailed evaluation data:', error);
       // Fallback to the initially loaded data if detail fetch fails
       this.selectedEvaluation = speech; 
       this.showSpeechDetail = true;
+      this.parseFilteredWords(speech);
     });
   }
 
@@ -289,25 +292,24 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   // Parse filtered profanity words from JSON data
   parseFilteredWords(evaluation: EvaluationData) {
     this.filteredWords = [];
-    
-    if (evaluation && evaluation.filtrelihKelimeler) {
+    // Sadece filtreli_kelimeler anahtarını kontrol et, hem büyük hem küçük harfli anahtarları da kontrol et
+    let raw: any = null;
+    if (evaluation) {
+      raw = (evaluation as any).filtreli_kelimeler || (evaluation as any).filtreliKelimeler || (evaluation as any).filtrelihKelimeler;
+    }
+    if (raw) {
       try {
-        // Parse the JSON string into an object
-        const filteredWordsData = JSON.parse(evaluation.filtrelihKelimeler);
-        
-        // Transform the object into a format that's easier to display
+        const filteredWordsData = typeof raw === 'string' ? JSON.parse(raw) : raw;
         this.filteredWords = Object.keys(filteredWordsData).map(word => {
           const wordData = filteredWordsData[word];
           return {
             word: word,
-            count: wordData.count, // Artık doğrudan count değerini alıyoruz
-            occurrences: wordData.occurrences // Occurrences dizisini doğrudan alıyoruz
+            count: wordData.count,
+            occurrences: wordData.occurrences
           };
         });
-        
-        console.log('Parsed filtered words:', this.filteredWords);
       } catch (e) {
-        console.error('Error parsing filtered words JSON:', e);
+        console.error('Error parsing filtered words JSON:', e, raw);
         this.filteredWords = [];
       }
     }
