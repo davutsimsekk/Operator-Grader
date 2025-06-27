@@ -168,7 +168,32 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    this.loadData();
+    // Eğer query parametrelerinde cagriId ve showDetail varsa, ilgili çağrıyı aç
+    const params = (window as any).location.search;
+    const urlParams = new URLSearchParams(params);
+    const cagriId = urlParams.get('cagriId');
+    const showDetail = urlParams.get('showDetail');
+    if (cagriId && showDetail) {
+      this.loadDataAndShowDetail(cagriId);
+    } else {
+      this.loadData();
+    }
+  }
+
+  loadDataAndShowDetail(cagriId: string) {
+    this.evaluationService.getEvaluations().subscribe(data => {
+      this.evaluationDataSource.data = data;
+      this.filteredData = data;
+      this.allData = data;
+      this.applyFilters();
+      const found = data.find(ev => ev.cagriId === cagriId);
+      if (found) {
+        this.selectedEvaluation = found;
+        this.showSpeechDetail = true;
+        this.parseFilteredWords(found);
+        this.parsePointDeductionReasons(found);
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -581,6 +606,25 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     // Ses dosyasının oynatma durumunu senkronize et
     if (this.audioVisualizer) {
       this.isPlaying = this.audioVisualizer.isPlaying;
+    }
+  }
+
+  goToOperatorDetail(row: any) {
+    // Asistanlar sayfasındaki id mantığı ile aynı şekilde id bul
+    // (asistanSicil + '|' + asistanAdiSoyadi) sırasına göre index
+    if (!this.allData) return;
+    const operatorKey = row.asistanSicil + '|' + row.asistanAdiSoyadi;
+    const operatorMap = new Map<string, number>();
+    let idx = 1;
+    for (const ev of this.allData) {
+      const key = ev.asistanSicil + '|' + ev.asistanAdiSoyadi;
+      if (!operatorMap.has(key)) {
+        operatorMap.set(key, idx++);
+      }
+    }
+    const opId = operatorMap.get(operatorKey);
+    if (opId) {
+      this.router.navigate(['/asistanlar', opId]);
     }
   }
 }

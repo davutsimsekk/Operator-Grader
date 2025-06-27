@@ -1,0 +1,45 @@
+.operator-detail-container {
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.operator-summary-card, .operator-calls-card {
+  width: 100%;
+  max-width: 900px;
+  margin-bottom: 24px;
+}
+.summary-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 8px;
+}
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1em;
+}
+.calls-table {
+  width: 100%;
+  margin-top: 12px;
+}
+.point-badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1em;
+}
+.high-points { background: #e8f5e9; color: #388e3c; }
+.medium-points { background: #fffde7; color: #fbc02d; }
+.low-points { background: #ffebee; color: #c62828; }
+.transcript-preview {
+  cursor: pointer;
+  color: #1976d2;
+}
+.no-results {
+  text-align: center;
+  color: #888;
+  margin-top: 24px;
+}

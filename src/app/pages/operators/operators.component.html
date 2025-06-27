@@ -1,0 +1,58 @@
+<div class="operators-page-container">
+  <mat-card class="operators-list-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>group</mat-icon>
+      <mat-card-title>Operatörler</mat-card-title>
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Operatör Ara</mat-label>
+        <input matInput [(ngModel)]="searchQuery" (ngModelChange)="applySearch()" placeholder="Ad veya Sicil No ile ara...">
+        <button *ngIf="searchQuery" matSuffix mat-icon-button aria-label="Temizle" (click)="searchQuery=''; applySearch();">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="filteredOperators" class="operators-table">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Ad Soyad</th>
+          <td mat-cell *matCellDef="let op">{{op.name}}</td>
+        </ng-container>
+        <ng-container matColumnDef="sicil">
+          <th mat-header-cell *matHeaderCellDef>Sicil No</th>
+          <td mat-cell *matCellDef="let op">{{op.sicil}}</td>
+        </ng-container>
+        <ng-container matColumnDef="averageScore">
+          <th mat-header-cell *matHeaderCellDef>Ortalama Puan</th>
+          <td mat-cell *matCellDef="let op">
+            <span class="point-badge" [ngClass]="{
+              'high-points': op.averageScore >= 80,
+              'medium-points': op.averageScore >= 60 && op.averageScore < 80,
+              'low-points': op.averageScore < 60
+            }">{{op.averageScore}}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="callCount">
+          <th mat-header-cell *matHeaderCellDef>Çağrı Sayısı</th>
+          <td mat-cell *matCellDef="let op">{{op.callCount}}</td>
+        </ng-container>
+        <ng-container matColumnDef="totalDuration">
+          <th mat-header-cell *matHeaderCellDef>Toplam Süre</th>
+          <td mat-cell *matCellDef="let op">{{formatDuration(op.totalDuration)}}</td>
+        </ng-container>
+        <ng-container matColumnDef="lastCallDate">
+          <th mat-header-cell *matHeaderCellDef>Son Çağrı</th>
+          <td mat-cell *matCellDef="let op">{{op.lastCallDate | date:'dd.MM.yyyy HH:mm'}}</td>
+        </ng-container>
+        <ng-container matColumnDef="trend">
+          <th mat-header-cell *matHeaderCellDef>Trend</th>
+          <td mat-cell *matCellDef="let op">
+            <app-mini-trend-graph [trend]="op.trend"></app-mini-trend-graph>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="['name','sicil','averageScore','callCount','totalDuration','lastCallDate','trend']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['name','sicil','averageScore','callCount','totalDuration','lastCallDate','trend'];" (click)="goToOperatorDetail(row)" style="cursor:pointer"></tr>
+      </table>
+      <div *ngIf="filteredOperators.length === 0" class="no-results">Sonuç bulunamadı.</div>
+    </mat-card-content>
+  </mat-card>
+</div>

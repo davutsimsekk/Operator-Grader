@@ -1,0 +1,31 @@
+.operators-page-container {
+  padding: 24px 0;
+  display: flex;
+  justify-content: center;
+}
+.operators-list-card {
+  width: 100%;
+  max-width: 1200px;
+}
+.search-field {
+  margin-left: 32px;
+  min-width: 300px;
+}
+.operators-table {
+  width: 100%;
+  margin-top: 16px;
+}
+.point-badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1em;
+}
+.high-points { background: #e8f5e9; color: #388e3c; }
+.medium-points { background: #fffde7; color: #fbc02d; }
+.low-points { background: #ffebee; color: #c62828; }
+.no-results {
+  text-align: center;
+  color: #888;
+  margin-top: 24px;
+}
