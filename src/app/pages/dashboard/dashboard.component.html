@@ -150,6 +150,20 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Puan Kırma Sebepleri Bölümü -->
+              <div *ngIf="pointDeductionReasons && pointDeductionReasons.length > 0" class="point-deduction-section" style="margin-top: 20px; padding-top: 10px; border-top: 1px solid #eee;">
+                <h4>
+                  <mat-icon style="vertical-align: middle; color: #1976d2; margin-right: 8px;">info</mat-icon>
+                  Puan Kırılan Noktalar
+                </h4>
+                <div class="point-deduction-container">
+                  <div *ngFor="let reason of pointDeductionReasons" class="point-deduction-item" style="margin-bottom: 10px; padding: 8px; background-color: #e3f2fd; border-left: 3px solid #1976d2; border-radius: 4px; color: #1565c0;">
+                    <mat-icon style="font-size: 18px; margin-right: 6px; vertical-align: middle; color: #1976d2;">remove_circle_outline</mat-icon>
+                    <span>{{reason}}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 

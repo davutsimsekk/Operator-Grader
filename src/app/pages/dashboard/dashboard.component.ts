@@ -89,6 +89,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   // Filtrelenmiş kelimeleri saklamak için dizi
   filteredWords: any[] = [];
 
+  // Puan kırma sebeplerini saklamak için dizi
+  pointDeductionReasons: string[] = [];
+
   // Audio visualizer bileşeni referansını ekliyoruz
   @ViewChild('audioVisualizer') audioVisualizer!: AudioVisualizerComponent;
   
@@ -260,12 +263,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       this.showSpeechDetail = true;
       // Parse filtered words if they exist
       this.parseFilteredWords(detailedEvaluation);
+      this.parsePointDeductionReasons(detailedEvaluation);
     }, error => {
       console.error('Error fetching detailed evaluation data:', error);
       // Fallback to the initially loaded data if detail fetch fails
       this.selectedEvaluation = speech; 
       this.showSpeechDetail = true;
       this.parseFilteredWords(speech);
+      this.parsePointDeductionReasons(speech);
     });
   }
 
@@ -278,14 +283,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       
       this.selectedEvaluation = detailedEvaluation;
       this.showSpeechDetail = true;
-      
       // Parse filtered words if they exist
       this.parseFilteredWords(detailedEvaluation);
+      this.parsePointDeductionReasons(detailedEvaluation);
     }, error => {
       console.error('Error fetching detailed evaluation data:', error);
       // Fallback to the initially loaded data if detail fetch fails
       this.selectedEvaluation = evaluation;
       this.showSpeechDetail = true;
+      this.parsePointDeductionReasons(evaluation);
     });
   }
 
@@ -311,6 +317,28 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       } catch (e) {
         console.error('Error parsing filtered words JSON:', e, raw);
         this.filteredWords = [];
+      }
+    }
+  }
+
+  // Puan kırma sebeplerini JSON'dan parse et
+  parsePointDeductionReasons(evaluation: EvaluationData) {
+    this.pointDeductionReasons = [];
+    let raw: any = null;
+    if (evaluation) {
+      raw = (evaluation as any).puan_kirma_sebepleri || (evaluation as any).puanKirmaSebepleri;
+    }
+    if (raw) {
+      try {
+        const reasons = typeof raw === 'string' ? JSON.parse(raw) : raw;
+        if (Array.isArray(reasons)) {
+          this.pointDeductionReasons = reasons;
+        } else if (typeof reasons === 'object' && reasons !== null) {
+          this.pointDeductionReasons = Object.values(reasons);
+        }
+      } catch (e) {
+        console.error('Error parsing point deduction reasons JSON:', e, raw);
+        this.pointDeductionReasons = [];
       }
     }
   }
