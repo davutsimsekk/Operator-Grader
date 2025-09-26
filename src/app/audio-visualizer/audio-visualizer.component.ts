@@ -47,7 +47,7 @@ export class AudioVisualizerComponent implements AfterViewInit, OnChanges {
       barRadius: 2, // Yuvarlatılmış çubuk kenarları
       autoCenter: true,
       height: 100,
-      backend: 'MediaElement',
+      backend: 'MediaElement', // Use MediaElement for compatibility
       normalize: true, // Dalga formunu normalize et
     });
     console.log('WaveSurfer instance:', this.wavesurfer);
@@ -74,6 +74,14 @@ export class AudioVisualizerComponent implements AfterViewInit, OnChanges {
       this.cdr.detectChanges();
     });
 
+    this.wavesurfer.on('loading', (percent) => {
+      console.log('WaveSurfer loading:', percent + '%');
+    });
+
+    this.wavesurfer.on('decode', (duration) => {
+      console.log('WaveSurfer decoded, duration:', duration);
+    });
+
     this.wavesurfer.on('play', () => {
       this.isPlaying = true;
       console.log('Audio is playing');
@@ -88,6 +96,12 @@ export class AudioVisualizerComponent implements AfterViewInit, OnChanges {
 
     this.wavesurfer.on('error', (err) => {
       console.error('WaveSurfer error:', err);
+      console.error('Error details:', {
+        audioSource: this.audioSource,
+        evaluation: this.evaluation,
+        error: err
+      });
+      
       this.isAudioReady = false;
       this.audioReady = false;
       this.audioReadyChange.emit(this.audioReady);
@@ -133,6 +147,24 @@ export class AudioVisualizerComponent implements AfterViewInit, OnChanges {
       }
       
       console.log('Loading audio from path:', audioPath);
+      
+      // Test the URL accessibility
+      const testAudio = new Audio();
+      testAudio.crossOrigin = 'anonymous';
+      testAudio.src = audioPath;
+      
+      testAudio.addEventListener('canplay', () => {
+        console.log('Test audio can play - URL is accessible');
+      });
+      
+      testAudio.addEventListener('error', (e) => {
+        console.error('Test audio failed to load:', e);
+        console.error('Audio error details:', {
+          error: testAudio.error,
+          networkState: testAudio.networkState,
+          readyState: testAudio.readyState
+        });
+      });
       
       // Yükleme başlamadan önce durumu sıfırla
       this.isAudioReady = false;
@@ -198,5 +230,64 @@ export class AudioVisualizerComponent implements AfterViewInit, OnChanges {
     const formattedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
     
     return `${formattedMinutes}:${formattedSeconds}`;
+  }
+
+  recreateWithMediaElement() {
+    try {
+      // Destroy existing wavesurfer
+      if (this.wavesurfer) {
+        this.wavesurfer.destroy();
+      }
+
+      // Create new wavesurfer with MediaElement backend
+      this.wavesurfer = WaveSurfer.create({
+        container: this.waveform.nativeElement,
+        waveColor: '#3498db',
+        progressColor: '#e74c3c',
+        cursorColor: 'rgba(0, 0, 0, 0.5)',
+        barWidth: 2,
+        barGap: 1,
+        barRadius: 2,
+        autoCenter: true,
+        height: 100,
+        backend: 'MediaElement', // Use MediaElement as fallback
+        normalize: true,
+      });
+
+      // Re-register events but without the error fallback to prevent infinite loop
+      this.wavesurfer.on('ready', () => {
+        console.log('WaveSurfer (MediaElement) is ready!');
+        this.isAudioReady = true;
+        this.audioReady = true;
+        this.audioReadyChange.emit(this.audioReady);
+        
+        this.duration = this.wavesurfer.getDuration();
+        this.formattedDuration = this.formatTime(this.duration);
+        
+        this.cdr.detectChanges();
+      });
+
+      this.wavesurfer.on('play', () => {
+        this.isPlaying = true;
+        this.cdr.detectChanges();
+      });
+
+      this.wavesurfer.on('pause', () => {
+        this.isPlaying = false;
+        this.cdr.detectChanges();
+      });
+
+      this.wavesurfer.on('timeupdate', (currentTime) => {
+        this.currentTime = currentTime;
+        this.formattedCurrentTime = this.formatTime(currentTime);
+        this.cdr.detectChanges();
+      });
+
+      // Load the audio again
+      this.loadAudio();
+      
+    } catch (error) {
+      console.error('Error recreating WaveSurfer with MediaElement:', error);
+    }
   }
 }

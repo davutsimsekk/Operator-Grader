@@ -1,0 +1,210 @@
+<div class="mukerrer-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="page-title">
+      <mat-icon class="title-icon">content_copy</mat-icon>
+      <h1>Mükerrer Çağrılar</h1>
+    </div>
+    <p class="page-description">
+      Aynı operatör adı ve süreye sahip tekrarlanan çağrıları görüntüleyin
+    </p>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-container" *ngIf="!loading">
+    <mat-card class="stat-card primary">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon>group_work</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ totalDuplicateGroups }}</h3>
+            <p>Mükerrer Grup</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card warning">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon>phone</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ totalDuplicateCalls }}</h3>
+            <p>Toplam Mükerrer Çağrı</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card info">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon>trending_up</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ getOverallAverageScore() }}</h3>
+            <p>Ortalama Puan</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Mükerrer çağrılar yükleniyor...</p>
+  </div>
+
+  <!-- Duplicate Calls Table -->
+  <mat-card class="table-card" *ngIf="!loading">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>list</mat-icon>
+        Mükerrer Çağrı Listesi
+      </mat-card-title>
+      <mat-card-subtitle>
+        Operatör adı ve süre bazında gruplandırılmış tekrarlanan çağrılar
+      </mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <div class="table-container" *ngIf="duplicates.length > 0; else noDuplicates">
+        <div class="custom-table">
+          <!-- Table Header -->
+          <div class="table-header">
+            <div class="header-cell operator-col">Operatör Adı</div>
+            <div class="header-cell duration-col">Süre</div>
+            <div class="header-cell count-col">Tekrar Sayısı</div>
+            <div class="header-cell score-col">Ortalama Puan</div>
+            <div class="header-cell date-col">Tarih Aralığı</div>
+            <div class="header-cell actions-col">İşlemler</div>
+          </div>
+
+          <!-- Table Rows -->
+          <div class="table-body">
+            <div class="row-group" *ngFor="let duplicate of duplicates">
+              <!-- Main Row -->
+              <div class="table-row" [class.expanded]="isExpanded(duplicate)">
+                <div class="table-cell operator-col">
+                  <div class="operator-info">
+                    <mat-icon class="operator-icon">person</mat-icon>
+                    <span>{{ duplicate.operatorName }}</span>
+                  </div>
+                </div>
+                <div class="table-cell duration-col">
+                  <mat-chip class="duration-chip">
+                    <mat-icon matChipAvatar>timer</mat-icon>
+                    {{ formatDuration(duplicate.duration) }}
+                  </mat-chip>
+                </div>
+                <div class="table-cell count-col">
+                  <mat-chip [class]="'count-chip ' + getOccurrenceColor(duplicate.occurrenceCount)">
+                    {{ duplicate.occurrenceCount }} kez
+                  </mat-chip>
+                </div>
+                <div class="table-cell score-col">
+                  <mat-chip [class]="'score-chip ' + getScoreColor(duplicate.averageScore)">
+                    {{ duplicate.averageScore }}
+                  </mat-chip>
+                </div>
+                <div class="table-cell date-col">
+                  <div class="date-range">
+                    <div class="date-item">
+                      <mat-icon class="date-icon">schedule</mat-icon>
+                      <span class="date-label">İlk:</span>
+                      <span class="date-value">{{ formatDate(duplicate.firstOccurrence) }}</span>
+                    </div>
+                    <div class="date-item" *ngIf="duplicate.firstOccurrence !== duplicate.lastOccurrence">
+                      <mat-icon class="date-icon">schedule</mat-icon>
+                      <span class="date-label">Son:</span>
+                      <span class="date-value">{{ formatDate(duplicate.lastOccurrence) }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="table-cell actions-col">
+                  <button 
+                    mat-stroked-button 
+                    color="primary" 
+                    (click)="toggleDetails(duplicate)"
+                    [disabled]="isLoadingDetails(duplicate)">
+                    <mat-icon *ngIf="!isLoadingDetails(duplicate)">
+                      {{ isExpanded(duplicate) ? 'expand_less' : 'expand_more' }}
+                    </mat-icon>
+                    <mat-spinner *ngIf="isLoadingDetails(duplicate)" diameter="20"></mat-spinner>
+                    {{ isExpanded(duplicate) ? 'Gizle' : 'Detayları Göster' }}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Expanded Details Row -->
+              <div class="details-row" *ngIf="isExpanded(duplicate)" [@slideDown]>
+                <div class="detail-container">
+                  <h4>
+                    <mat-icon>info</mat-icon>
+                    Çağrı Detayları ({{ duplicate.operatorName }} - {{ formatDuration(duplicate.duration) }})
+                  </h4>
+                  <div class="calls-grid">
+                    <mat-card 
+                      class="call-detail-card" 
+                      *ngFor="let call of expandedDetails[getKey(duplicate)]">
+                      <mat-card-header>
+                        <mat-card-title>
+                          <mat-icon>phone</mat-icon>
+                          Çağrı ID: {{ call.cagriId }}
+                        </mat-card-title>
+                        <mat-card-subtitle>
+                          {{ formatDate(call.cagriTarihi) }}
+                        </mat-card-subtitle>
+                      </mat-card-header>
+                      <mat-card-content>
+                        <div class="call-info-grid">
+                          <div class="info-item">
+                            <strong>Asistan Sicil:</strong>
+                            <span>{{ call.asistanSicil }}</span>
+                          </div>
+                          <div class="info-item">
+                            <strong>Değerlendiren:</strong>
+                            <span>{{ call.degerlendireninAdi }}</span>
+                          </div>
+                          <div class="info-item">
+                            <strong>Değerlendirme No:</strong>
+                            <span>{{ call.degerlendirmeNo }}</span>
+                          </div>
+                          <div class="info-item">
+                            <strong>Puan:</strong>
+                            <mat-chip [class]="'score-chip ' + getScoreColor(call.degerlendirmePuani)">
+                              {{ call.degerlendirmePuani }}
+                            </mat-chip>
+                          </div>
+                          <div class="info-item" *ngIf="call.puanKirmaSebepleri">
+                            <strong>Puan Kırma Sebepleri:</strong>
+                            <span class="reason-text">{{ call.puanKirmaSebepleri }}</span>
+                          </div>
+                        </div>
+                      </mat-card-content>
+                    </mat-card>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Duplicates Message -->
+      <ng-template #noDuplicates>
+        <div class="no-data-container">
+          <mat-icon class="no-data-icon">sentiment_satisfied</mat-icon>
+          <h3>Mükerrer çağrı bulunamadı</h3>
+          <p>Sistemde aynı operatör adı ve süreye sahip tekrarlanan çağrı bulunmamaktadır.</p>
+        </div>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</div>
