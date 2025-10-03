@@ -36,6 +36,89 @@
   margin: 0;
 }
 
+/* Quick Filters */
+.quick-filters {
+  margin-bottom: 24px;
+}
+
+.quick-filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.quick-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  padding: 0 16px;
+  height: 36px;
+}
+
+.filter-toggle-btn {
+  position: relative;
+}
+
+.filter-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background-color: #FF5722;
+  border-radius: 50%;
+  font-size: 8px;
+}
+
+/* Filter Card */
+.filter-card {
+  margin-bottom: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter-card mat-card-header {
+  margin-bottom: 16px;
+}
+
+.filter-card mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #333;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.filter-field {
+  width: 100%;
+}
+
+.filter-field.short {
+  min-width: 120px;
+}
+
+.filter-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.filter-results {
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
+}
+
 /* Statistics Cards */
 .stats-container {
   display: grid;
@@ -214,6 +297,42 @@
   border-right: none;
 }
 
+/* Table enhancements */
+.header-filter-btn {
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  margin-left: 4px;
+}
+
+.header-filter-btn:hover {
+  opacity: 1;
+}
+
+.quick-filter-operator {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  margin-left: 8px;
+}
+
+.table-row:hover .quick-filter-operator {
+  opacity: 0.7;
+}
+
+.quick-filter-operator:hover {
+  opacity: 1 !important;
+}
+
+.result-count {
+  font-size: 14px;
+  font-weight: normal;
+  color: #666;
+}
+
+.filtered-indicator {
+  color: #666;
+  font-style: italic;
+}
+
 /* Column widths */
 .operator-col {
   flex: 2;
@@ -277,6 +396,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
 }
 
 .operator-icon {
@@ -465,10 +585,41 @@
   font-size: 14px;
 }
 
+/* Enhanced stats cards */
+.stat-info small.filtered-indicator {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+}
+
 /* Responsive Design */
+/* Responsive improvements */
 @media (max-width: 768px) {
   .mukerrer-container {
     padding: 16px;
+  }
+  
+  .quick-filter-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .quick-filter-btn {
+    justify-content: center;
+  }
+  
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-actions {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .filter-results {
+    text-align: center;
   }
   
   .stats-container {

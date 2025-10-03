@@ -10,6 +10,137 @@
     </p>
   </div>
 
+  <!-- Quick Filter Buttons -->
+  <div class="quick-filters" *ngIf="!loading">
+    <div class="quick-filter-buttons">
+      <button mat-stroked-button color="primary" (click)="filterByHighOccurrence()" class="quick-filter-btn">
+        <mat-icon>warning</mat-icon>
+        Yüksek Tekrar (5+)
+      </button>
+      <button mat-stroked-button color="accent" (click)="filterByLowScore()" class="quick-filter-btn">
+        <mat-icon>trending_down</mat-icon>
+        Düşük Puan (≤70)
+      </button>
+      <button mat-stroked-button color="warn" (click)="filterByLastWeek()" class="quick-filter-btn">
+        <mat-icon>date_range</mat-icon>
+        Son Hafta
+      </button>
+      <button mat-stroked-button (click)="filterByLastMonth()" class="quick-filter-btn">
+        <mat-icon>calendar_month</mat-icon>
+        Son Ay
+      </button>
+      <button mat-stroked-button color="warn" (click)="filterByShortCalls()" class="quick-filter-btn">
+        <mat-icon>timer</mat-icon>
+        Kısa Çağrılar (≤5s)
+      </button>
+      <button mat-stroked-button (click)="filterByMediumCalls()" class="quick-filter-btn">
+        <mat-icon>schedule</mat-icon>
+        Orta Çağrılar (6-30s)
+      </button>
+      <button mat-stroked-button (click)="filterByLongCalls()" class="quick-filter-btn">
+        <mat-icon>hourglass_full</mat-icon>
+        Uzun Çağrılar (>30s)
+      </button>
+      <button mat-icon-button (click)="toggleFilters()" class="filter-toggle-btn" 
+             [color]="showFilters ? 'primary' : 'basic'"
+             matTooltip="Detaylı Filtreler">
+        <mat-icon>{{ showFilters ? 'filter_list_off' : 'filter_list' }}</mat-icon>
+        <span class="filter-badge" *ngIf="hasActiveFilters()">•</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Advanced Filters -->
+  <mat-card class="filter-card" *ngIf="showFilters && !loading" [@filterAnimation]>
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>tune</mat-icon>
+        Detaylı Filtreler
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="filter-grid">
+        <!-- Operator Name Filter -->
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Operatör Adı</mat-label>
+          <mat-select [(ngModel)]="filterValues.operatorName" (selectionChange)="applyFilters()">
+            <mat-option value="">Tüm Operatörler</mat-option>
+            <mat-option *ngFor="let operator of uniqueOperators" [value]="operator">
+              {{ operator }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Duration Range Filters -->
+        <mat-form-field appearance="outline" class="filter-field short">
+          <mat-label>Min Süre (saniye)</mat-label>
+          <input matInput type="number" [(ngModel)]="filterValues.minDuration" 
+                 (ngModelChange)="applyFilters()" min="0" placeholder="0">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field short">
+          <mat-label>Max Süre (saniye)</mat-label>
+          <input matInput type="number" [(ngModel)]="filterValues.maxDuration" 
+                 (ngModelChange)="applyFilters()" min="0" placeholder="60">
+        </mat-form-field>
+
+        <!-- Occurrence Range -->
+        <mat-form-field appearance="outline" class="filter-field short">
+          <mat-label>Min Tekrar</mat-label>
+          <input matInput type="number" [(ngModel)]="filterValues.minOccurrences" 
+                 (ngModelChange)="applyFilters()" min="2">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field short">
+          <mat-label>Max Tekrar</mat-label>
+          <input matInput type="number" [(ngModel)]="filterValues.maxOccurrences" 
+                 (ngModelChange)="applyFilters()" min="2">
+        </mat-form-field>
+
+        <!-- Score Range -->
+        <mat-form-field appearance="outline" class="filter-field short">
+          <mat-label>Min Puan</mat-label>
+          <input matInput type="number" [(ngModel)]="filterValues.minScore" 
+                 (ngModelChange)="applyFilters()" min="0" max="100">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field short">
+          <mat-label>Max Puan</mat-label>
+          <input matInput type="number" [(ngModel)]="filterValues.maxScore" 
+                 (ngModelChange)="applyFilters()" min="0" max="100">
+        </mat-form-field>
+
+        <!-- Date Range -->
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Başlangıç Tarihi</mat-label>
+          <input matInput [matDatepicker]="dateFromPicker" 
+                 [(ngModel)]="filterValues.dateFrom" 
+                 (dateChange)="applyFilters()">
+          <mat-datepicker-toggle matSuffix [for]="dateFromPicker"></mat-datepicker-toggle>
+          <mat-datepicker #dateFromPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Bitiş Tarihi</mat-label>
+          <input matInput [matDatepicker]="dateToPicker" 
+                 [(ngModel)]="filterValues.dateTo" 
+                 (dateChange)="applyFilters()">
+          <mat-datepicker-toggle matSuffix [for]="dateToPicker"></mat-datepicker-toggle>
+          <mat-datepicker #dateToPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="filter-actions">
+        <button mat-stroked-button color="primary" (click)="clearFilters()">
+          <mat-icon>clear</mat-icon>
+          Filtreleri Temizle
+        </button>
+        <span class="filter-results" *ngIf="hasActiveFilters()">
+          {{ duplicates.length }} / {{ originalDuplicates.length }} grup gösteriliyor
+        </span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
   <!-- Statistics Cards -->
   <div class="stats-container" *ngIf="!loading">
     <mat-card class="stat-card primary">
@@ -21,6 +152,9 @@
           <div class="stat-info">
             <h3>{{ totalDuplicateGroups }}</h3>
             <p>Mükerrer Grup</p>
+            <small *ngIf="hasActiveFilters()" class="filtered-indicator">
+              ({{ originalDuplicates.length }} toplam)
+            </small>
           </div>
         </div>
       </mat-card-content>
@@ -67,6 +201,9 @@
       <mat-card-title>
         <mat-icon>list</mat-icon>
         Mükerrer Çağrı Listesi
+        <span class="result-count" *ngIf="hasActiveFilters()">
+          ({{ duplicates.length }} sonuç)
+        </span>
       </mat-card-title>
       <mat-card-subtitle>
         Operatör adı ve süre bazında gruplandırılmış tekrarlanan çağrılar
@@ -78,7 +215,13 @@
         <div class="custom-table">
           <!-- Table Header -->
           <div class="table-header">
-            <div class="header-cell operator-col">Operatör Adı</div>
+            <div class="header-cell operator-col">
+              Operatör Adı
+              <button mat-icon-button class="header-filter-btn" 
+                      matTooltip="Operatöre göre filtrele">
+                <mat-icon>filter_alt</mat-icon>
+              </button>
+            </div>
             <div class="header-cell duration-col">Süre</div>
             <div class="header-cell count-col">Tekrar Sayısı</div>
             <div class="header-cell score-col">Ortalama Puan</div>
@@ -95,6 +238,11 @@
                   <div class="operator-info">
                     <mat-icon class="operator-icon">person</mat-icon>
                     <span>{{ duplicate.operatorName }}</span>
+                    <button mat-icon-button class="quick-filter-operator" 
+                            matTooltip="Sadece bu operatörü göster"
+                            (click)="filterByOperator(duplicate.operatorName)">
+                      <mat-icon>filter_alt</mat-icon>
+                    </button>
                   </div>
                 </div>
                 <div class="table-cell duration-col">
@@ -200,9 +348,18 @@
       <!-- No Duplicates Message -->
       <ng-template #noDuplicates>
         <div class="no-data-container">
-          <mat-icon class="no-data-icon">sentiment_satisfied</mat-icon>
-          <h3>Mükerrer çağrı bulunamadı</h3>
-          <p>Sistemde aynı operatör adı ve süreye sahip tekrarlanan çağrı bulunmamaktadır.</p>
+          <mat-icon class="no-data-icon">
+            {{ hasActiveFilters() ? 'search_off' : 'sentiment_satisfied' }}
+          </mat-icon>
+          <h3>
+            {{ hasActiveFilters() ? 'Filtre kriterlerine uygun mükerrer çağrı bulunamadı' : 'Mükerrer çağrı bulunamadı' }}
+          </h3>
+          <p>
+            {{ hasActiveFilters() ? 'Filtre kriterlerinizi değiştirip tekrar deneyin.' : 'Sistemde aynı operatör adı ve süreye sahip tekrarlanan çağrı bulunmamaktadır.' }}
+          </p>
+          <button mat-stroked-button color="primary" *ngIf="hasActiveFilters()" (click)="clearFilters()">
+            Filtreleri Temizle
+          </button>
         </div>
       </ng-template>
     </mat-card-content>
