@@ -35,7 +35,7 @@
                      matTooltip="Filtreleri {{ showFilters ? 'Gizle' : 'Göster' }}">
                 <mat-icon>{{ showFilters ? 'tune_off' : 'tune' }}</mat-icon>
                 <span class="filters-badge" *ngIf="(filterValues.asistanAdiSoyadi || filterValues.asistanSicil || 
-                                              filterValues.cagriId || filterValues.degerlendireninAdi || 
+                                              filterValues.cagriId || filterValues.telefonNumarasi || filterValues.degerlendireninAdi || 
                                               filterValues.degerlendirmeDurumu || filterValues.puanMin || 
                                               filterValues.puanMax || filterValues.tarihMin || filterValues.tarihMax)">
                   •
@@ -56,6 +56,10 @@
           <mat-form-field appearance="outline" class="filter-field">
             <mat-label>Çağrı ID</mat-label>
             <input matInput [(ngModel)]="filterValues.cagriId" (ngModelChange)="applyFilters()">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Telefon</mat-label>
+            <input matInput [(ngModel)]="filterValues.telefonNumarasi" (ngModelChange)="applyFilters()">
           </mat-form-field>
           <mat-form-field appearance="outline" class="filter-field">
             <mat-label>Değerlendiren</mat-label>
@@ -126,8 +130,8 @@
                 <p><strong>Puan:</strong> {{selectedEvaluation?.degerlendirmePuani}}</p>
               </div>
               <div class="detail-item">
-                <mat-icon>assignment</mat-icon>
-                <p><strong>Değerlendirme No:</strong> {{selectedEvaluation?.degerlendirmeNo}}</p>
+                <mat-icon>phone</mat-icon>
+                <p><strong>Telefon:</strong> {{selectedEvaluation?.telefonNumarasi || 'Bilinmiyor'}}</p>
               </div>
             </div>
             <!-- Database content display section -->
@@ -220,10 +224,10 @@
                 <td mat-cell *matCellDef="let row">{{row.degerlendireninAdi}}</td>
               </ng-container>
 
-              <!-- Değerlendirme No -->
-              <ng-container matColumnDef="degerlendirmeNo">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Değerlendirme No</th>
-                <td mat-cell *matCellDef="let row">{{row.degerlendirmeNo}}</td>
+              <!-- Telefon Numarası -->
+              <ng-container matColumnDef="telefonNumarasi">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Telefon</th>
+                <td mat-cell *matCellDef="let row">{{row.telefonNumarasi || 'Bilinmiyor'}}</td>
               </ng-container>
 
               <!-- Değerlendirme Puanı -->

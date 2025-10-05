@@ -149,6 +149,10 @@
   border-left: 4px solid #00BCD4;
 }
 
+.stat-card.success {
+  border-left: 4px solid #4CAF50;
+}
+
 .stat-content {
   display: flex;
   align-items: center;
@@ -336,12 +340,18 @@
 /* Column widths */
 .operator-col {
   flex: 2;
-  min-width: 200px;
+  min-width: 180px;
+}
+
+.phone-col {
+  flex: 1.5;
+  min-width: 140px;
+  justify-content: center;
 }
 
 .duration-col {
   flex: 1;
-  min-width: 120px;
+  min-width: 100px;
   justify-content: center;
 }
 
@@ -407,6 +417,13 @@
 .duration-chip {
   background-color: #e3f2fd;
   color: #1976d2;
+}
+
+.phone-chip {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+  font-family: monospace;
+  font-size: 12px;
 }
 
 .count-chip {

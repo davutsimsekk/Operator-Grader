@@ -21,6 +21,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 export interface DuplicateCall {
   operatorName: string;
   duration: string;  // Changed from number to string (e.g., "0:02")
+  phoneNumber: string;  // Telefon numarası eklendi
   occurrenceCount: number;
   callIds: string[];
   firstOccurrence: string;
@@ -32,6 +33,7 @@ export interface DuplicateCallsResponse {
   duplicates: DuplicateCall[];
   totalDuplicateGroups: number;
   totalDuplicateCalls: number;
+  totalCalls?: number;
 }
 
 export interface CallDetail {
@@ -107,6 +109,7 @@ export class MukerrerComponent implements OnInit {
   loading = true;
   totalDuplicateGroups = 0;
   totalDuplicateCalls = 0;
+  totalCalls = 0;
   expandedDetails: { [key: string]: CallDetail[] } = {};
   loadingDetails: { [key: string]: boolean } = {};
 
@@ -129,6 +132,7 @@ export class MukerrerComponent implements OnInit {
 
   displayedColumns: string[] = [
     'operatorName',
+    'phoneNumber',
     'duration', 
     'occurrenceCount',
     'averageScore',
@@ -152,6 +156,7 @@ export class MukerrerComponent implements OnInit {
         this.duplicates = [...this.originalDuplicates];
         this.totalDuplicateGroups = response.totalDuplicateGroups;
         this.totalDuplicateCalls = response.totalDuplicateCalls;
+        this.totalCalls = response.totalCalls || 0;
         this.extractUniqueOperators();
         this.applyFilters();
         this.loading = false;
@@ -171,10 +176,11 @@ export class MukerrerComponent implements OnInit {
     return this.http.get<DuplicateCallsResponse>(`${this.API_URL}/duplicate_calls`);
   }
 
-  getDuplicateCallDetails(operatorName: string, duration: string): Observable<CallDetail[]> {
+  getDuplicateCallDetails(operatorName: string, duration: string, phoneNumber: string): Observable<CallDetail[]> {
     const encodedOperatorName = encodeURIComponent(operatorName);
     const encodedDuration = encodeURIComponent(duration);
-    return this.http.get<CallDetail[]>(`${this.API_URL}/duplicate_calls/${encodedOperatorName}/${encodedDuration}`);
+    const encodedPhoneNumber = encodeURIComponent(phoneNumber);
+    return this.http.get<CallDetail[]>(`${this.API_URL}/duplicate_calls/${encodedOperatorName}/${encodedDuration}/${encodedPhoneNumber}`);
   }
 
   // Helper function to convert duration string (e.g., "0:05", "1:23") to seconds
@@ -327,7 +333,7 @@ export class MukerrerComponent implements OnInit {
   }
 
   toggleDetails(duplicate: DuplicateCall): void {
-    const key = `${duplicate.operatorName}-${duplicate.duration}`;
+    const key = `${duplicate.operatorName}-${duplicate.duration}-${duplicate.phoneNumber}`;
     
     if (this.expandedDetails[key]) {
       // Already expanded, collapse it
@@ -337,7 +343,7 @@ export class MukerrerComponent implements OnInit {
 
     // Load details
     this.loadingDetails[key] = true;
-    this.getDuplicateCallDetails(duplicate.operatorName, duplicate.duration).subscribe({
+    this.getDuplicateCallDetails(duplicate.operatorName, duplicate.duration, duplicate.phoneNumber).subscribe({
       next: (details) => {
         this.expandedDetails[key] = details;
         this.loadingDetails[key] = false;
@@ -350,7 +356,7 @@ export class MukerrerComponent implements OnInit {
   }
 
   getKey(duplicate: DuplicateCall): string {
-    return `${duplicate.operatorName}-${duplicate.duration}`;
+    return `${duplicate.operatorName}-${duplicate.duration}-${duplicate.phoneNumber}`;
   }
 
   isExpanded(duplicate: DuplicateCall): boolean {

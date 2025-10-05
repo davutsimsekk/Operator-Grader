@@ -1,7 +1,10 @@
 import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-mini-trend-graph',
+  standalone: true,
+  imports: [CommonModule],
   template: `
     <svg height="24" width="60">
       <polyline

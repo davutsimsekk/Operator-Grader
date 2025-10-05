@@ -15,6 +15,7 @@ export interface EvaluationData {
   sesDosyasi?: string; // Ses dosyası yolu
   transkript?: string; 
   filtrelihKelimeler?: string; // Küfürlü kelimeleri ve zaman aralıklarını içeren JSON
+  telefonNumarasi?: string; // Telefon numarası
 }
 
 @Injectable({

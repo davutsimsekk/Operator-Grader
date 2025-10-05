@@ -127,7 +127,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     'cagriTarihi',
     'cagriSuresi',
     'degerlendireninAdi',
-    'degerlendirmeNo',
+    'telefonNumarasi',
     'degerlendirmePuani'
   ];
 
@@ -143,6 +143,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     asistanAdiSoyadi: '',
     asistanSicil: '',
     cagriId: '',
+    telefonNumarasi: '',
     degerlendireninAdi: '',
     degerlendirmeDurumu: '',
     puanMin: null,
@@ -250,13 +251,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       const matchesOperator = !this.filterValues.asistanAdiSoyadi || (item.asistanAdiSoyadi || '').toLowerCase().includes(this.filterValues.asistanAdiSoyadi.toLowerCase());
       const matchesSicil = !this.filterValues.asistanSicil || (item.asistanSicil || '').toString().includes(this.filterValues.asistanSicil);
       const matchesCagriId = !this.filterValues.cagriId || (item.cagriId || '').toString().includes(this.filterValues.cagriId);
+      const matchesTelefon = !this.filterValues.telefonNumarasi || ((item as any).telefonNumarasi || '').toString().includes(this.filterValues.telefonNumarasi);
       const matchesDegerlendiren = !this.filterValues.degerlendireninAdi || (item.degerlendireninAdi || '').toLowerCase().includes(this.filterValues.degerlendireninAdi.toLowerCase());
       const matchesDurum = !this.filterValues.degerlendirmeDurumu || (item.degerlendirmeDurumu || '').toLowerCase().includes(this.filterValues.degerlendirmeDurumu.toLowerCase());
       const matchesPuanMin = this.filterValues.puanMin == null || item.degerlendirmePuani >= this.filterValues.puanMin;
       const matchesPuanMax = this.filterValues.puanMax == null || item.degerlendirmePuani <= this.filterValues.puanMax;
       const matchesTarihMin = !this.filterValues.tarihMin || new Date(item.cagriTarihi) >= new Date(this.filterValues.tarihMin);
       const matchesTarihMax = !this.filterValues.tarihMax || new Date(item.cagriTarihi) <= new Date(this.filterValues.tarihMax);
-      return matchesOperator && matchesSicil && matchesCagriId && matchesDegerlendiren && matchesDurum && matchesPuanMin && matchesPuanMax && matchesTarihMin && matchesTarihMax;
+      return matchesOperator && matchesSicil && matchesCagriId && matchesTelefon && matchesDegerlendiren && matchesDurum && matchesPuanMin && matchesPuanMax && matchesTarihMin && matchesTarihMax;
     });
     this.currentMainPage = 0;
   }
@@ -266,6 +268,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       asistanAdiSoyadi: '',
       asistanSicil: '',
       cagriId: '',
+      telefonNumarasi: '',
       degerlendireninAdi: '',
       degerlendirmeDurumu: '',
       puanMin: null,
